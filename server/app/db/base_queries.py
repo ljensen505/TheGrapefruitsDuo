@@ -10,7 +10,7 @@ class BaseQueries:
         self.table: str = None  # type: ignore
         self.connect_db: Callable = connect_db
 
-    async def get_all(self) -> list[dict]:
+    async def select_all_series(self) -> list[dict]:
         query = f"SELECT * FROM {self.table}"
         db = connect_db()
         cursor = db.cursor(dictionary=True)
@@ -20,7 +20,7 @@ class BaseQueries:
         db.close()
         return data  # type: ignore
 
-    async def get_one(self, id: int) -> dict | None:
+    async def select_one_series_by_id(self, id: int) -> dict | None:
         query = f"SELECT * FROM {self.table} WHERE id = %s"
         db = self.connect_db()
         cursor = db.cursor(dictionary=True)

@@ -12,7 +12,7 @@ class GroupController(BaseController):
         self.db: GroupQueries = group_queries
 
     async def get_group(self) -> Group:
-        if (data := await self.db.get_one()) is None:
+        if (data := await self.db.select_one_series_by_id()) is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Group not found"
             )
