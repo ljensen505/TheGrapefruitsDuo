@@ -1,0 +1,68 @@
+body {
+  margin: 0;
+  padding: 0;
+
+  &::before {
+    content: " ";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+        rgba(252, 171, 83, 0.3),
+        rgba(252, 171, 83, 0.3)
+      ),
+      url("/bg.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    will-change: transform;
+    z-index: -1;
+    background-color: rgba(249, 255, 63, 0.3);
+  }
+
+  @media (max-width: 600px) {
+    &::before {
+      background-image: none;
+      background-color: var(--grapefruit-yellow-washed-out);
+    }
+  }
+}
+
+.btn-primary {
+  background-color: var(--group-info-color);
+  border-color: var(--group-info-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--group-info-lighter-color);
+  border-color: var(--group-info-lighter-color);
+}
+
+.btn-primary:disabled {
+  background-color: var(--group-info-disabled-color);
+  border-color: var(--group-info-disabled-color);
+}
+
+.btn-primary:focus {
+  background-color: var(--group-info-darker-color);
+  border-color: var(--group-info-darker-color);
+  box-shadow: 0 0 0 0.2rem var(--group-info-darker-color);
+}
+
+.error-text {
+  background-color: rgb(250, 201, 222);
+  display: block;
+  padding: 5px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.card {
+  background-color: transparent !important;
+
+  backdrop-filter: blur(15px);
+  border: 0px solid transparent !important;
+  color: var(--group-info-color) !important;
+}

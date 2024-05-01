@@ -1,0 +1,16 @@
+.footer {
+  background-image: linear-gradient(
+    to top,
+    rgba(139, 215, 210, 0.4) 60%,
+    transparent
+  ) !important;
+  color: var(--group-info-color) !important;
+}
+
+.nav-link {
+  color: var(--group-info-color) !important;
+}
+
+.nav-link:hover {
+  color: var(--group-info-lighter-color) !important;
+}

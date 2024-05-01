@@ -1,0 +1,5 @@
+.event-list-item {
+  background-color: transparent !important;
+  color: inherit;
+  border: 0.15rem solid var(--group-info-color);
+}

@@ -1,0 +1,34 @@
+.edit-icon {
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  font-size: 4rem;
+  color: green;
+}
+
+.edit-icon:hover {
+  color: darkgreen;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background-color: transparent;
+  border: none;
+}
+
+.btn-edit:hover {
+  background-color: transparent;
+  border: none;
+}
+
+.btn-edit:focus {
+  background-color: transparent;
+  border: none;
+  color: var(--group-info-darker-color);
+}
+
+.btn-edit:active {
+  background-color: transparent;
+  border: none;
+}

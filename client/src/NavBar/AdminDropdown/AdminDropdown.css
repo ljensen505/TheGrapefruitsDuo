@@ -1,0 +1,7 @@
+#api-container {
+  font-size: smaller;
+}
+
+#auth-row {
+  background-color: var(--grapefruit-yellow-washed-out);
+}

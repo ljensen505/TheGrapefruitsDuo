@@ -1,0 +1,12 @@
+#email-signup-button {
+  background-color: var(--grapefruit-yellow);
+  color: var(--group-info-darker);
+}
+
+#email-signup-button:hover {
+  background-color: var(--grapefruit-yellow-washed-out);
+}
+
+#email-signup-button:focus {
+  background-color: var(--grapefruit-yellow-washed-out);
+}

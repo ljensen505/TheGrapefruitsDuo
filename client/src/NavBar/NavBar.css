@@ -1,0 +1,36 @@
+.navbar-color {
+  backdrop-filter: blur(10px);
+  transition: background-color 0.5s ease;
+}
+
+.navbar-text-color .dropdown-toggle {
+  color: var(--group-info-color);
+}
+
+.navbar-scrolled {
+  background-color: var(--grapefruit-yellow);
+}
+
+.logo {
+  height: 1.7rem;
+  width: auto;
+}
+
+#nav-contact {
+  margin-right: 8px;
+}
+
+#admin-dropdown {
+  text-decoration: none;
+  text-align: left;
+  padding-left: 0;
+}
+
+#admin-dropdown:hover {
+  text-decoration: none;
+  color: var(--group-info-lighter-color);
+}
+
+.dropdown-menu {
+  background-color: var(--grapefruit-yellow-washed-out);
+}

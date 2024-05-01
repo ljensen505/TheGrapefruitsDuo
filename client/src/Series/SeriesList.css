@@ -1,0 +1,19 @@
+.events-title {
+  color: var(--group-info-color);
+  margin-bottom: 6rem;
+}
+
+hr {
+  border: 0;
+  height: 4px; /* This controls the thickness of the divider */
+  background: rgba(124, 1, 68); /* This sets the color of the divider */
+  margin-top: 10rem;
+  margin-bottom: 6rem;
+  opacity: 0.9;
+}
+
+#events {
+  padding-top: 70px;
+  margin-top: -70px;
+  margin-bottom: 400px;
+}

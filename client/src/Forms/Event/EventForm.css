@@ -1,0 +1,5 @@
+.event-form-container {
+  border: 2px solid var(--group-info-color);
+  border-radius: 5px;
+  margin-top: 5px;
+}

@@ -1,0 +1,13 @@
+.group-info {
+  color: var(--group-info-color);
+}
+
+.group-bio {
+  color: var(--group-info-color);
+  font-weight: 600 !important;
+}
+
+#about {
+  padding-top: 120px;
+  margin-top: -70px;
+}

@@ -1,0 +1,10 @@
+.musicians-title {
+  color: var(--group-info-color);
+  margin-bottom: 6rem;
+}
+
+#musicians {
+  padding-top: 70px;
+  margin-top: -70px;
+  margin-bottom: 400px;
+}
