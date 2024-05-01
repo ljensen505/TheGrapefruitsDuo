@@ -18,15 +18,14 @@ class EventQueries(BaseQueries):
         super().__init__()
         self.table = SERIES_TABLE
 
-    async def get_one(self, series_id: int) -> list[dict] | None:
+    async def select_one_series_by_id(self, series_id: int) -> list[dict] | None:
         query = f"""
-            SELECT *
-            FROM {SERIES_TABLE}
-            INNER JOIN {EVENT_TABLE}
-            ON {SERIES_TABLE}.series_id = {EVENT_TABLE}.series_id
-            WHERE {SERIES_TABLE}.series_id = %s
+            SELECT s.series_id , s.name , s.description , s.poster_id , e.event_id , e.location , e.`time` , e.ticket_url , e.map_url
+            FROM {SERIES_TABLE} s
+            LEFT JOIN {EVENT_TABLE} e
+            ON s.series_id = e.series_id
+            WHERE s.series_id = %s
         """
-
         db = self.connect_db()
         cursor = db.cursor(dictionary=True)
         cursor.execute(query, (series_id,))
@@ -35,12 +34,12 @@ class EventQueries(BaseQueries):
         db.close()
         return data
 
-    async def get_all(self) -> list[dict]:
+    async def select_all_series(self) -> list[dict]:
         query = f"""
-                SELECT * 
-                FROM {SERIES_TABLE}
-                INNER JOIN {EVENT_TABLE}
-                ON {SERIES_TABLE}.series_id = {EVENT_TABLE}.series_id
+                SELECT s.series_id , s.name , s.description , s.poster_id , e.event_id , e.location , e.`time` , e.ticket_url , e.map_url
+                FROM {SERIES_TABLE} s
+                LEFT JOIN {EVENT_TABLE} e
+                ON s.series_id = e.series_id
             """
 
         db = self.connect_db()
@@ -52,7 +51,10 @@ class EventQueries(BaseQueries):
         return data
 
     async def insert_one_series(self, series: NewEventSeries) -> int:
-        query = f"INSERT INTO {self.table} (name, description) VALUES (%s, %s)"
+        query = f"""
+            INSERT INTO {self.table} (name, description)
+            VALUES (%s, %s)
+            """
         db = self.connect_db()
         cursor = db.cursor()
         cursor.execute(
@@ -69,7 +71,10 @@ class EventQueries(BaseQueries):
         return inserted_id
 
     async def insert_one_event(self, event: NewEvent, series_id: int) -> int:
-        query = f"INSERT INTO {EVENT_TABLE} (series_id, location, time, ticket_url, map_url) VALUES (%s, %s, %s, %s, %s)"
+        query = f"""
+            INSERT INTO {EVENT_TABLE} (series_id, location, time, ticket_url, map_url)
+            VALUES (%s, %s, %s, %s, %s)
+            """
         db = self.connect_db()
         cursor = db.cursor()
         ticket_url = str(event.ticket_url) if event.ticket_url else None
@@ -84,7 +89,10 @@ class EventQueries(BaseQueries):
         return iserted_id
 
     async def delete_events_by_series(self, series: EventSeries) -> None:
-        query = f"DELETE FROM {EVENT_TABLE} WHERE series_id = %s"
+        query = f"""
+            DELETE FROM {EVENT_TABLE} 
+            WHERE series_id = %s
+            """
         db = self.connect_db()
         cursor = db.cursor()
         cursor.execute(query, (series.series_id,))
@@ -92,7 +100,10 @@ class EventQueries(BaseQueries):
         cursor.close()
 
     async def delete_one_series(self, series: EventSeries) -> None:
-        query = f"DELETE FROM {self.table} WHERE series_id = %s"
+        query = f"""
+            DELETE FROM {self.table}
+            WHERE series_id = %s
+            """
         db = self.connect_db()
         cursor = db.cursor()
         cursor.execute(query, (series.series_id,))
@@ -100,7 +111,11 @@ class EventQueries(BaseQueries):
         cursor.close()
 
     async def update_series_poster(self, series: EventSeries) -> None:
-        query = f"UPDATE {self.table} SET poster_id = %s WHERE series_id = %s"
+        query = f"""
+            UPDATE {self.table}
+            SET poster_id = %s
+            WHERE series_id = %s
+            """
         db = self.connect_db()
         cursor = db.cursor()
         cursor.execute(query, (series.poster_id, series.series_id))
@@ -109,10 +124,10 @@ class EventQueries(BaseQueries):
 
     async def replace_event(self, event: Event) -> None:
         query = f"""
-        UPDATE {EVENT_TABLE}
-        SET location = %s, time = %s, ticket_url = %s, map_url = %s
-        WHERE event_id = %s
-        """
+            UPDATE {EVENT_TABLE}
+            SET location = %s, time = %s, ticket_url = %s, map_url = %s
+            WHERE event_id = %s
+            """
         db = self.connect_db()
         cursor = db.cursor()
         ticket_url = str(event.ticket_url) if event.ticket_url else None
@@ -126,10 +141,10 @@ class EventQueries(BaseQueries):
 
     async def replace_series(self, series: EventSeries) -> None:
         query = f"""
-        UPDATE {self.table}
-        SET name = %s, description = %s, poster_id = %s
-        WHERE series_id = %s
-        """
+            UPDATE {self.table}
+            SET name = %s, description = %s, poster_id = %s
+            WHERE series_id = %s
+            """
         db = self.connect_db()
         cursor = db.cursor()
         cursor.execute(

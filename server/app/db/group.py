@@ -7,7 +7,7 @@ class GroupQueries(BaseQueries):
         super().__init__()
         self.table = GROUP_TABLE
 
-    async def get_one(self) -> dict:
+    async def select_one_series_by_id(self) -> dict:
         query = f"SELECT * FROM {self.table}"
         db = self.connect_db()
         cursor = db.cursor(dictionary=True)
@@ -21,7 +21,7 @@ class GroupQueries(BaseQueries):
 
         return data
 
-    async def get_all(self) -> None:
+    async def select_all_series(self) -> None:
         raise NotImplementedError(
             "get_all method not implemented for GroupQueries. There's only one row in the table."
         )

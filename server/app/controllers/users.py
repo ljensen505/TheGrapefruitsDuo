@@ -14,7 +14,7 @@ class UserController(BaseController):
         self.db: UserQueries = user_queries
 
     async def get_users(self) -> list[User]:
-        data = await self.db.get_all()
+        data = await self.db.select_all_series()
         try:
             return [User(**e) for e in data]
         except Exception as e:
@@ -24,7 +24,7 @@ class UserController(BaseController):
             )
 
     async def get_user_by_id(self, id: int) -> User:
-        if (data := await self.db.get_one(id)) is None:
+        if (data := await self.db.select_one_series_by_id(id)) is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )

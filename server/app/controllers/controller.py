@@ -51,7 +51,7 @@ class Controller:
         return await self.event_controller.get_all_series()
 
     async def get_event(self, id: int) -> EventSeries:
-        return await self.event_controller.get_one_series(id)
+        return await self.event_controller.get_one_series_by_id(id)
 
     async def create_event(
         self, series: NewEventSeries, token: HTTPAuthorizationCredentials

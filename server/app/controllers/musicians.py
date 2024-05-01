@@ -14,7 +14,7 @@ class MusicianController(BaseController):
         self.db: MusicianQueries = musician_queries
 
     async def get_musicians(self) -> list[Musician]:
-        data = await self.db.get_all()
+        data = await self.db.select_all_series()
         try:
             return [Musician(**m) for m in data]
         except Exception as e:
@@ -24,7 +24,7 @@ class MusicianController(BaseController):
             )
 
     async def get_musician(self, id: int) -> Musician:
-        if (data := await self.db.get_one(id)) is None:
+        if (data := await self.db.select_one_series_by_id(id)) is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Musician not found"
             )
