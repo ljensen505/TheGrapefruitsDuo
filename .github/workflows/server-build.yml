@@ -15,6 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: change to server directory
+        run: cd server
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v3
         with:
