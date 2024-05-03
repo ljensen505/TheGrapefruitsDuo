@@ -21,7 +21,7 @@ class BaseController:
         self.ALL_FILES = ALLOWED_FILES_TYPES
         self.MAX_FILE_SIZE = ONE_MB
 
-    async def verify_image(self, file: UploadFile) -> bytes:
+    def verify_image(self, file: UploadFile) -> bytes:
         """Verifies that the file is an image and is within the maximum file size.
 
         Args:
@@ -38,7 +38,8 @@ class BaseController:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"File type {file.content_type} not allowed. Allowed file types are {self.ALL_FILES}",
             )
-        image_file = await file.read()
+        with file.file as f:
+            image_file = f.read()
         if len(image_file) > self.MAX_FILE_SIZE:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

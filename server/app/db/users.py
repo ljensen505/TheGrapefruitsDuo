@@ -7,7 +7,7 @@ class UserQueries(BaseQueries):
         super().__init__()
         self.table = USER_TABLE
 
-    async def get_one_by_email(self, email: str) -> dict | None:
+    def get_one_by_email(self, email: str) -> dict | None:
         query = f"SELECT * FROM {self.table} WHERE email = %s"
         db = self.connect_db()
         cursor = db.cursor(dictionary=True)
@@ -18,7 +18,7 @@ class UserQueries(BaseQueries):
 
         return data
 
-    async def get_one_by_sub(self, sub: str) -> dict | None:
+    def get_one_by_sub(self, sub: str) -> dict | None:
         query = f"SELECT * FROM {self.table} WHERE sub = %s"
         db = self.connect_db()
         cursor = db.cursor(dictionary=True)
@@ -32,7 +32,7 @@ class UserQueries(BaseQueries):
 
         return data
 
-    async def update_sub(self, email: str, sub: str) -> None:
+    def update_sub(self, email: str, sub: str) -> None:
         query = f"UPDATE {self.table} SET sub = %s WHERE email = %s"
         db = self.connect_db()
         cursor = db.cursor()

@@ -35,15 +35,15 @@ bad_data = [
 ]
 
 
-async def mock_select_all_series():
+def mock_select_all_series():
     return sample_data
 
 
-async def mock_select_all_series_sad():
+def mock_select_all_series_sad():
     return bad_data
 
 
-async def mock_select_one_by_id(musician_id: int):
+def mock_select_one_by_id(musician_id: int):
     for musician in sample_data:
         if musician.get("id") == musician_id:
             return musician
@@ -67,9 +67,8 @@ TODO: write tests for following methods:
 """
 
 
-@pytest.mark.asyncio
-async def test_happy_get_musicians():
-    musicians = await ec.get_musicians()
+def test_happy_get_musicians():
+    musicians = ec.get_musicians()
     assert isinstance(musicians, list)
     assert len(musicians) == 2
     for musician in musicians:
@@ -85,19 +84,17 @@ async def test_happy_get_musicians():
     assert m2.headshot_id == "headshotABC"
 
 
-@pytest.mark.asyncio
-async def test_sad_get_musicians():
+def test_sad_get_musicians():
     mock_queries.select_all_series = mock_select_all_series_sad
     with pytest.raises(HTTPException) as e:
-        await ec.get_musicians()
+        ec.get_musicians()
     mock_queries.select_all_series = mock_select_all_series
     assert isinstance(e.value, HTTPException)
     assert e.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-@pytest.mark.asyncio
-async def test_happy_get_musician():
-    musician = await ec.get_musician(1)
+def test_happy_get_musician():
+    musician = ec.get_musician(1)
     assert isinstance(musician, Musician)
     assert musician.id == 1
     assert musician.name == "John Doe"
@@ -105,10 +102,9 @@ async def test_happy_get_musician():
     assert musician.headshot_id == "headshot123"
 
 
-@pytest.mark.asyncio
-async def test_musician_not_found():
+def test_musician_not_found():
     with pytest.raises(HTTPException) as e:
-        await ec.get_musician(3)
+        ec.get_musician(3)
     assert isinstance(e.value, HTTPException)
     assert e.value.status_code == status.HTTP_404_NOT_FOUND
     assert e.value.detail == "Musician not found"

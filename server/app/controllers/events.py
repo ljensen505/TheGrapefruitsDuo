@@ -43,7 +43,7 @@ class EventController(BaseController):
 
         return all_series
 
-    async def get_all_series(self) -> list[EventSeries]:
+    def get_all_series(self) -> list[EventSeries]:
         """Retrieves all EventSeries objects from the database and returns them as a list.
 
         Raises:
@@ -52,7 +52,7 @@ class EventController(BaseController):
         Returns:
             list[EventSeries]: A list of EventSeries objects which are suitable for a response body
         """
-        series_data = await self.db.select_all_series()
+        series_data = self.db.select_all_series()
 
         try:
             return [series for series in self._all_series(series_data).values()]
@@ -63,7 +63,7 @@ class EventController(BaseController):
                 detail=f"Error retrieving event objects: {e}",
             )
 
-    async def get_one_series_by_id(self, series_id: int) -> EventSeries:
+    def get_one_series_by_id(self, series_id: int) -> EventSeries:
         """Builds and returns a single EventSeries object by its numeric ID.
 
         Args:
@@ -76,7 +76,7 @@ class EventController(BaseController):
         Returns:
             EventSeries: A single EventSeries object
         """
-        if not (rows := await self.db.select_one_by_id(series_id)):
+        if not (rows := self.db.select_one_by_id(series_id)):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
             )
@@ -90,7 +90,7 @@ class EventController(BaseController):
                 detail=f"Error creating event object: {e}",
             )
 
-    async def create_series(self, series: NewEventSeries) -> EventSeries:
+    def create_series(self, series: NewEventSeries) -> EventSeries:
         """Takes a NewEventSeries object and passes it to the database layer for insertion.
 
         Args:
@@ -103,19 +103,17 @@ class EventController(BaseController):
             EventSeries: The newly created EventSeries object with an ID
         """
         try:
-            inserted_id = await self.db.insert_one_series(series)
+            inserted_id = self.db.insert_one_series(series)
             for new_event in series.events:
-                await self.db.insert_one_event(new_event, inserted_id)
-            return await self.get_one_series_by_id(inserted_id)
+                self.db.insert_one_event(new_event, inserted_id)
+            return self.get_one_series_by_id(inserted_id)
         except IntegrityError as e:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Series name already exists. Each series must have a unique name.\n{e}",
             )
 
-    async def add_series_poster(
-        self, series_id: int, poster: UploadFile
-    ) -> EventSeries:
+    def add_series_poster(self, series_id: int, poster: UploadFile) -> EventSeries:
         """Adds (or updates) a poster image to a series.
 
         Args:
@@ -125,12 +123,12 @@ class EventController(BaseController):
         Returns:
             EventSeries: The updated EventSeries object
         """
-        series = await self.get_one_series_by_id(series_id)
-        series.poster_id = await self._upload_poster(poster)
-        await self.db.update_series_poster(series)
-        return await self.get_one_series_by_id(series.series_id)
+        series = self.get_one_series_by_id(series_id)
+        series.poster_id = self._upload_poster(poster)
+        self.db.update_series_poster(series)
+        return self.get_one_series_by_id(series.series_id)
 
-    async def _upload_poster(self, poster: UploadFile) -> str:
+    def _upload_poster(self, poster: UploadFile) -> str:
         """Uploads a poster image to Cloudinary and returns the public ID for storage in the database.
         Should only be used internally.
 
@@ -143,7 +141,7 @@ class EventController(BaseController):
         Returns:
             str: The public ID of the uploaded image
         """
-        image_file = await self.verify_image(poster)
+        image_file = self.verify_image(poster)
         try:
             data = uploader.upload(image_file)
             return data.get("public_id")
@@ -153,16 +151,16 @@ class EventController(BaseController):
                 detail=f"Error uploading image: {e}",
             )
 
-    async def delete_series(self, id: int) -> None:
+    def delete_series(self, id: int) -> None:
         """Ensures an EventSeries object exists and then deletes it from the database.
 
         Args:
             id (int): The numeric ID of the series to delete
         """
-        series = await self.get_one_series_by_id(id)
-        await self.db.delete_one_series(series)
+        series = self.get_one_series_by_id(id)
+        self.db.delete_one_series(series)
 
-    async def update_series(self, route_id: int, series: EventSeries) -> EventSeries:
+    def update_series(self, route_id: int, series: EventSeries) -> EventSeries:
         """Updates an existing EventSeries object in the database.
 
         Args:
@@ -181,14 +179,14 @@ class EventController(BaseController):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="ID in URL does not match ID in request body",
             )
-        prev_series = await self.get_one_series_by_id(series.series_id)
+        prev_series = self.get_one_series_by_id(series.series_id)
         if series.poster_id != prev_series.poster_id:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Poster ID cannot be updated directly. Use the /poster endpoint instead.",
             )
-        await self.db.delete_events_by_series(series)
-        await self.db.replace_series(series)
+        self.db.delete_events_by_series(series)
+        self.db.replace_series(series)
         for event in series.events:
-            await self.db.insert_one_event(event, series.series_id)
-        return await self.get_one_series_by_id(series.series_id)
+            self.db.insert_one_event(event, series.series_id)
+        return self.get_one_series_by_id(series.series_id)
