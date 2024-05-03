@@ -10,9 +10,9 @@ from app.models.event import Event, EventSeries, NewEventSeries
 
 
 class EventController(BaseController):
-    def __init__(self) -> None:
+    def __init__(self, eq=event_queries) -> None:
         super().__init__()
-        self.db: EventQueries = event_queries
+        self.db: EventQueries = eq
 
     def _all_series(self, data: list[dict]) -> list[EventSeries]:
         all_series: dict[str, EventSeries] = {}

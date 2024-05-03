@@ -29,7 +29,6 @@ pytest = "^8.1.1"
 [tool.poetry.scripts]
 dev = "app.scripts.run:main"
 seed = "app.scripts.seed:main"
-token = "app.scripts.token:main"
 
 
 [build-system]
