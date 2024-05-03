@@ -22,8 +22,16 @@ class BaseController:
         self.MAX_FILE_SIZE = ONE_MB
 
     async def verify_image(self, file: UploadFile) -> bytes:
-        """
-        Verifies that the file is an image and is within the maximum file size.
+        """Verifies that the file is an image and is within the maximum file size.
+
+        Args:
+            file (UploadFile): The file to be verified
+
+        Raises:
+            HTTPException: If the file is not an image or exceeds the maximum file size (status code 400)
+
+        Returns:
+            bytes: The file contents as bytes
         """
         if file.content_type not in self.ALL_FILES:
             raise HTTPException(
@@ -39,8 +47,10 @@ class BaseController:
         return image_file
 
     def log_error(self, e: Exception) -> None:
-        """
-        Logs an error to a timestamped text file in the logs directory.
+        """Logs an error to a timestamped text file in the logs directory.
+
+        Args:
+            e (Exception): Any exception object
         """
         curr_dir = Path(__file__).parent
         log_dir = curr_dir / "logs"
