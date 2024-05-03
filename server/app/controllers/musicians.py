@@ -24,7 +24,7 @@ class MusicianController(BaseController):
             )
 
     async def get_musician(self, id: int) -> Musician:
-        if (data := await self.db.select_one_series_by_id(id)) is None:
+        if (data := await self.db.select_one_by_id(id)) is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Musician not found"
             )

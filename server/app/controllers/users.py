@@ -24,7 +24,7 @@ class UserController(BaseController):
             )
 
     async def get_user_by_id(self, id: int) -> User:
-        if (data := await self.db.select_one_series_by_id(id)) is None:
+        if (data := await self.db.select_one_by_id(id)) is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
