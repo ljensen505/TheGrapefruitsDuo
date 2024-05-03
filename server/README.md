@@ -28,10 +28,10 @@ To seed the mysql database:
 poetry run seed
 ```
 
-To retrieve a token for testing:
+Automated tests can be run with:
 
 ```bash
-poetry run token
+poetry run pytest
 ```
 
 To run the FastAPI app in development mode:
