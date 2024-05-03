@@ -11,6 +11,3 @@ class NewMusician(BaseModel):
 
 class Musician(NewMusician):
     id: int
-
-
-MUSICIAN_TABLE = "musicians"

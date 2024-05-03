@@ -9,6 +9,12 @@ class DBException(Exception):
 
 
 def connect_db() -> mysql.connector.MySQLConnection:
+    """
+    Connects to the MySQL database using credentials from the .env file.
+    Returns a MySQLConnection object which can be used by the database query layer.
+
+    Credential values are validated and an exception is raised if any are missing.
+    """
     load_dotenv()
     host = os.getenv("DB_HOST")
     user = os.getenv("DB_USER")

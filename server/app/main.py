@@ -3,7 +3,7 @@ from asyncio import gather
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.controllers import Controller
+from app.controllers import MainController
 from app.models.tgd import TheGrapefruitsDuo
 from app.routers.contact import router as contact_router
 from app.routers.events import router as event_router
@@ -23,7 +23,7 @@ app.include_router(contact_router)
 app.include_router(event_router)
 app.include_router(user_router)
 
-controller = Controller()
+controller = MainController()
 
 origins = [
     "http://localhost:3000",

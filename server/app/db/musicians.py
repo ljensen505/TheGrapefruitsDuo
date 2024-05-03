@@ -1,8 +1,8 @@
 from icecream import ic
 
+from app.constants import MUSICIAN_TABLE
 from app.db.base_queries import BaseQueries
 from app.db.conn import connect_db
-from app.models.musician import MUSICIAN_TABLE
 
 
 class MusicianQueries(BaseQueries):

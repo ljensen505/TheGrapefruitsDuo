@@ -2,15 +2,9 @@ from asyncio import gather
 
 from icecream import ic
 
+from app.constants import EVENT_TABLE, SERIES_TABLE
 from app.db.base_queries import BaseQueries
-from app.models.event import (
-    EVENT_TABLE,
-    SERIES_TABLE,
-    Event,
-    EventSeries,
-    NewEvent,
-    NewEventSeries,
-)
+from app.models.event import Event, EventSeries, NewEvent, NewEventSeries
 
 
 class EventQueries(BaseQueries):

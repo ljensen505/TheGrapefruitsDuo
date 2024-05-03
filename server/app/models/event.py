@@ -30,7 +30,3 @@ class EventSeries(NewEventSeries):
     series_id: int
     events: list[Event]
     poster_id: Optional[str] = None
-
-
-SERIES_TABLE = "series"
-EVENT_TABLE = "events"

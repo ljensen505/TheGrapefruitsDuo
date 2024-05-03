@@ -6,20 +6,25 @@ from pathlib import Path
 from fastapi import HTTPException, UploadFile, status
 from icecream import ic
 
+from app.constants import ALLOWED_FILES_TYPES, ONE_MB
 from app.db.base_queries import BaseQueries
-
-ALLOWED_FILES_TYPES = ["image/jpeg", "image/png"]
-MAX_FILE_SIZE = 1000000  # 1 MB
 
 
 class BaseController:
+    """
+    A generic controller class which includes logging, image verification, and other common methods.
+    Model-specific controllers should inherit from this class and this class should not be instantiated directly.
+    """
+
     def __init__(self) -> None:
         self.db: BaseQueries = None  # type: ignore
         self.ALL_FILES = ALLOWED_FILES_TYPES
-        self.MAX_FILE_SIZE = MAX_FILE_SIZE
+        self.MAX_FILE_SIZE = ONE_MB
 
     async def verify_image(self, file: UploadFile) -> bytes:
-        print("verifying image")
+        """
+        Verifies that the file is an image and is within the maximum file size.
+        """
         if file.content_type not in self.ALL_FILES:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -34,6 +39,9 @@ class BaseController:
         return image_file
 
     def log_error(self, e: Exception) -> None:
+        """
+        Logs an error to a timestamped text file in the logs directory.
+        """
         curr_dir = Path(__file__).parent
         log_dir = curr_dir / "logs"
         log_dir.mkdir(exist_ok=True)

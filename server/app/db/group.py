@@ -1,5 +1,5 @@
+from app.constants import GROUP_TABLE
 from app.db.base_queries import BaseQueries
-from app.models.group import GROUP_TABLE
 
 
 class GroupQueries(BaseQueries):

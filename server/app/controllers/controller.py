@@ -13,7 +13,15 @@ from app.models.musician import Musician
 from app.models.user import User
 
 
-class Controller:
+class MainController:
+    """
+    The main controller and entry point for all API requests.
+    All methods are either pass-throughs to the appropriate controller or
+    are used to coordinate multiple controllers.
+
+    token-based authentication is handled here as needed per the nature of the data being accessed.
+    """
+
     def __init__(self) -> None:
         self.event_controller = EventController()
         self.musician_controller = MusicianController()
