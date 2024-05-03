@@ -2,13 +2,20 @@ from datetime import datetime
 from unittest.mock import Mock
 
 import pytest
+from icecream import ic
 from pydantic_core import Url
 
 from app.controllers.events import EventController
 from app.models.event import Event, EventSeries
 
 mock_queries = Mock()
-ec = EventController(eq=mock_queries)
+ec = EventController(event_queries=mock_queries)
+
+eventbrite_url = "https://www.eventbrite.com/e/the-grapefruits-duo-presents-works-for-horn-and-piano-tickets-1234567890"
+medford = "Medford, OR"
+newport_church = "First Presbyterian Church Newport"
+eugene_church = "First Church of Christ, Scientist, Eugene"
+map_url = "https://maps.app.goo.gl/hNfN8X5FBZLg8LDF8"
 
 
 def test_type():
@@ -17,17 +24,21 @@ def test_type():
 
 @pytest.mark.asyncio
 async def test_all_series_with_no_data():
-    async def select_all_series() -> list[dict]:
+    """Tests with absent data."""
+
+    async def no_series() -> list[dict]:
         return []
 
-    mock_queries.select_all_series = select_all_series
+    mock_queries.select_all_series = no_series
     result = await ec.get_all_series()
     assert result == []
 
 
 @pytest.mark.asyncio
 async def test_all_series_with_basic_data():
-    async def select_all_series() -> list[dict]:
+    """Tests a single valid row with no event info"""
+
+    async def one_series_with_no_events() -> list[dict]:
         return [
             {
                 "name": "Test Series",
@@ -37,7 +48,7 @@ async def test_all_series_with_basic_data():
             }
         ]
 
-    mock_queries.select_all_series = select_all_series
+    mock_queries.select_all_series = one_series_with_no_events
     result = await ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 1
@@ -52,17 +63,14 @@ async def test_all_series_with_basic_data():
 
 @pytest.mark.asyncio
 async def test_all_series_with_detailed_data():
+    """Tests a single valid row with event info"""
+
     series_id = 1
     series_name = "The Grapefruits Duo Presents: Works for Horn and Piano"
     series_description = "Pieces by Danzi, Gomez, Gounod, Grant, and Rusnak!"
     poster_id = "The_Grapefruits_Present_qhng6y"
-    eventbrite_url = "https://www.eventbrite.com/e/the-grapefruits-duo-presents-works-for-horn-and-piano-tickets-1234567890"
-    medford = "Medford, OR"
-    newport_church = "First Presbyterian Church Newport"
-    eugene_church = "First Church of Christ, Scientist, Eugene"
-    map_url = "https://maps.app.goo.gl/hNfN8X5FBZLg8LDF8"
 
-    async def select_all_series() -> list[dict]:
+    async def one_series_with_events() -> list[dict]:
 
         row_1 = {
             "series_id": series_id,
@@ -99,7 +107,7 @@ async def test_all_series_with_detailed_data():
             row_3,
         ]
 
-    mock_queries.select_all_series = select_all_series
+    mock_queries.select_all_series = one_series_with_events
     result = await ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 1
@@ -142,7 +150,9 @@ async def test_all_series_with_detailed_data():
 
 @pytest.mark.asyncio
 async def test_all_series_with_many_series():
-    async def select_all_series() -> list[dict]:
+    """Tests multiple series with no events."""
+
+    async def many_series() -> list[dict]:
         return [
             {
                 "name": "Test Series",
@@ -164,7 +174,7 @@ async def test_all_series_with_many_series():
             },
         ]
 
-    mock_queries.select_all_series = select_all_series
+    mock_queries.select_all_series = many_series
     result = await ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 3
@@ -175,10 +185,12 @@ async def test_all_series_with_many_series():
 
 @pytest.mark.asyncio
 async def test_all_series_with_error():
+    """Tests an error during the retrieval process."""
+
     mock_log_error = Mock()
     ec.log_error = mock_log_error
 
-    async def select_all_series() -> list[dict]:
+    async def invalid_series() -> list[dict]:
         # no series name
         return [
             {
@@ -188,7 +200,77 @@ async def test_all_series_with_error():
             }
         ]
 
-    mock_queries.select_all_series = select_all_series
+    mock_queries.select_all_series = invalid_series
     with pytest.raises(Exception):
         await ec.get_all_series()
         Mock.assert_called_once(mock_log_error)
+
+
+@pytest.mark.asyncio
+async def test_one_series():
+    async def one_series_no_events(series_id: int) -> list[dict]:
+        return [
+            {
+                "series_id": series_id,
+                "name": "Test Series",
+                "description": "Test Description",
+                "poster_id": "abc123",
+            }
+        ]
+
+    mock_queries.select_one_by_id = one_series_no_events
+    series = await ec.get_one_series_by_id(1)
+    assert isinstance(series, EventSeries)
+    assert series.name == "Test Series"
+    assert series.description == "Test Description"
+    assert series.series_id == 1
+    assert series.poster_id == "abc123"
+    assert series.events == []
+
+
+@pytest.mark.asyncio
+async def test_one_series_with_events():
+    async def one_series_with_events(series_id: int) -> list[dict]:
+        return [
+            {
+                "series_id": series_id,
+                "name": "Test Series",
+                "description": "Test Description",
+                "poster_id": "abc123",
+                "event_id": 1,
+                "location": medford,
+                "time": "2024-05-31 19:00:00.000",
+                "ticket_url": eventbrite_url,
+            },
+            {
+                "series_id": series_id,
+                "name": "Test Series",
+                "description": "Test Description",
+                "poster_id": "abc123",
+                "event_id": 2,
+                "location": newport_church,
+                "time": "2024-06-16 16:00:00.000",
+                "map_url": map_url,
+            },
+            {
+                "series_id": series_id,
+                "name": "Test Series",
+                "description": "Test Description",
+                "poster_id": "abc123",
+                "event_id": 3,
+                "location": eugene_church,
+                "time": "2024-06-23 15:00:00.000",
+            },
+        ]
+
+    mock_queries.select_one_by_id = one_series_with_events
+    series = await ec.get_one_series_by_id(1)
+    assert isinstance(series, EventSeries)
+    assert series.name == "Test Series"
+    assert series.description == "Test Description"
+    assert series.series_id == 1
+    assert series.poster_id == "abc123"
+    events = series.events
+    assert len(events) == 3
+    for event in events:
+        assert isinstance(event, Event)
