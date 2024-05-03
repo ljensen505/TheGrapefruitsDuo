@@ -85,22 +85,22 @@ class MusicianController(BaseController):
         """
         musician = await self.get_musician(musician_id)
         if new_bio != musician.bio:
-            return await self._update_musician_bio(musician.id, new_bio)
+            return await self._update_musician_bio(musician, new_bio)
         if file is not None:
-            return await self._upload_headshot(musician.id, file)
+            return await self._upload_headshot(musician, file)
 
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Update operation not implemented. Neither the bio or headshot was updated.",
         )
 
-    async def update_musician_headshot(
-        self, musician_id: int, headshot_id: str
+    async def _update_musician_headshot(
+        self, musician: Musician, headshot_id: str
     ) -> Musician:
         """Updates a musician's headshot in the database.
 
         Args:
-            id (int): The numeric ID of the musician to update
+            musician (Musician): The musician object to update
             headshot_id (str): The public ID of the new headshot (as determined by Cloudinary)
 
         Raises:
@@ -109,21 +109,20 @@ class MusicianController(BaseController):
         Returns:
             Musician: The updated Musician object
         """
-        await self.get_musician(musician_id)
         try:
-            await self.db.update_headshot(musician_id, headshot_id)
+            await self.db.update_headshot(musician, headshot_id)
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Error updating musician headshot: {e}",
             )
-        return await self.get_musician(musician_id)
+        return await self.get_musician(musician.id)
 
-    async def _update_musician_bio(self, musician_id: int, bio: str) -> Musician:
+    async def _update_musician_bio(self, musician: Musician, bio: str) -> Musician:
         """Updates a musician's bio in the database.
 
         Args:
-            id (int): The numeric ID of the musician to update
+            musician (Musician): The musician object to update
             bio (str): The new biography for the musician
 
         Raises:
@@ -132,21 +131,20 @@ class MusicianController(BaseController):
         Returns:
             Musician: The updated Musician object
         """
-        await self.get_musician(musician_id)  # Check if musician exists
         try:
-            await self.db.update_bio(musician_id, bio)
+            await self.db.update_bio(musician, bio)
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Error updating musician bio: {e}",
             )
-        return await self.get_musician(musician_id)
+        return await self.get_musician(musician.id)
 
-    async def _upload_headshot(self, id: int, file: UploadFile) -> Musician:
+    async def _upload_headshot(self, musician: Musician, file: UploadFile) -> Musician:
         """Uploads a new headshot for a musician and updates the database with the new public ID.
 
         Args:
-            id (int): The numeric ID of the musician to update
+            musician (Musician): The musician object to update
             file (UploadFile): The new headshot file
 
         Raises:
@@ -163,6 +161,6 @@ class MusicianController(BaseController):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to upload image",
             )
-        await self.update_musician_headshot(id, public_id)
+        await self._update_musician_headshot(musician, public_id)
 
-        return await self.get_musician(id)
+        return await self.get_musician(musician.id)
