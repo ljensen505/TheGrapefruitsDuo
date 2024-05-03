@@ -63,7 +63,7 @@ class EventController(BaseController):
         """
         Builds and returns a single EventSeries object by its numeric ID.
         """
-        if not (data := await self.db.select_one_series_by_id(series_id)):
+        if not (data := await self.db.select_one_by_id(series_id)):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
             )

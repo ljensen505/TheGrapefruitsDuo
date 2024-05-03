@@ -8,11 +8,16 @@ from app.models.event import Event, EventSeries, NewEvent, NewEventSeries
 
 
 class EventQueries(BaseQueries):
+    """
+    A collection of queries for handling Event and Series data.
+    Inherits from BaseQueries, which provides a connection to the database.
+    """
+
     def __init__(self) -> None:
         super().__init__()
         self.table = SERIES_TABLE
 
-    async def select_one_series_by_id(self, series_id: int) -> list[dict] | None:
+    async def select_one_by_id(self, series_id: int) -> list[dict] | None:
         query = f"""
             SELECT s.series_id , s.name , s.description , s.poster_id , e.event_id , e.location , e.`time` , e.ticket_url , e.map_url
             FROM {SERIES_TABLE} s
@@ -29,6 +34,11 @@ class EventQueries(BaseQueries):
         return data
 
     async def select_all_series(self) -> list[dict]:
+        """
+        Queries for all Series and Event info and returns a list of dictionaries.
+        Data is gathered with a LEFT JOIN on the Event table to ensure all Series are returned.
+        A Series with no Events is valid.
+        """
         query = f"""
                 SELECT s.series_id , s.name , s.description , s.poster_id , e.event_id , e.location , e.`time` , e.ticket_url , e.map_url
                 FROM {SERIES_TABLE} s

@@ -7,7 +7,7 @@ class GroupQueries(BaseQueries):
         super().__init__()
         self.table = GROUP_TABLE
 
-    async def select_one_series_by_id(self) -> dict:
+    async def select_one_by_id(self) -> dict:
         query = f"SELECT * FROM {self.table}"
         db = self.connect_db()
         cursor = db.cursor(dictionary=True)
