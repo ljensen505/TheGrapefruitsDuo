@@ -2,11 +2,18 @@ from datetime import datetime
 
 from dotenv import load_dotenv
 
+from app.constants import (
+    EVENT_TABLE,
+    GROUP_TABLE,
+    MUSICIAN_TABLE,
+    SERIES_TABLE,
+    USER_TABLE,
+)
 from app.db.conn import connect_db
-from app.models.event import EVENT_TABLE, SERIES_TABLE, Event, EventSeries
-from app.models.group import GROUP_TABLE, Group
-from app.models.musician import MUSICIAN_TABLE, NewMusician
-from app.models.user import USER_TABLE, User
+from app.models.event import Event, EventSeries
+from app.models.group import Group
+from app.models.musician import NewMusician
+from app.models.user import User
 
 margarite: NewMusician = NewMusician(
     name="Margarite Waddell",

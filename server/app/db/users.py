@@ -1,5 +1,5 @@
+from app.constants import USER_TABLE
 from app.db.base_queries import BaseQueries
-from app.models.user import USER_TABLE
 
 
 class UserQueries(BaseQueries):

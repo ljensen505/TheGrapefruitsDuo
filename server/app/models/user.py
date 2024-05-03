@@ -8,6 +8,3 @@ class User(BaseModel):
     email: str
     sub: Optional[str] = None
     id: int | None = None
-
-
-USER_TABLE = "users"
