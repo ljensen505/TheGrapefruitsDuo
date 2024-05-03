@@ -1,4 +1,4 @@
-name: thegrapefruitsduo fastapi build
+name: fastapi build
 
 on:
   push:
