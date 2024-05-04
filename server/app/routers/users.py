@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPAuthorizationCredentials
 
 from app.admin import oauth2_http
-from app.controllers import controller
 from app.models.user import User
+from app.routers import controller
 
 router = APIRouter(
     prefix="/users",

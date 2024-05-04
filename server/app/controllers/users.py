@@ -116,6 +116,14 @@ class UserController(BaseController):
             )
 
     def create_user(self, token: HTTPAuthorizationCredentials) -> User:
+        """Updates a user's sub in the database and creates a new User object.
+
+        Args:
+            token (HTTPAuthorizationCredentials): The token containing the user's email and sub
+
+        Returns:
+            User: A User object which is suitable for a response body
+        """
         email, sub = oauth_token.email_and_sub(token)
         user: User = self.get_user_by_email(email)
         if user.sub is None:

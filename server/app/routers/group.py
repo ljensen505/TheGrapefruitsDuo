@@ -3,8 +3,8 @@ from fastapi.security.http import HTTPAuthorizationCredentials
 from icecream import ic
 
 from app.admin import oauth2_http
-from app.controllers import controller
 from app.models.group import Group
+from app.routers import controller
 
 router = APIRouter(
     prefix="/group",
