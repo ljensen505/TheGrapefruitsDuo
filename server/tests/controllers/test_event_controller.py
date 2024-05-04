@@ -1,5 +1,5 @@
 from datetime import datetime
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 import pytest
 from icecream import ic
@@ -8,7 +8,7 @@ from pydantic_core import Url
 from app.controllers.events import EventController
 from app.models.event import Event, EventSeries
 
-mock_queries = Mock()
+mock_queries = MagicMock()
 ec = EventController(event_queries=mock_queries)
 
 eventbrite_url = "https://www.eventbrite.com/e/the-grapefruits-duo-presents-works-for-horn-and-piano-tickets-1234567890"
@@ -182,7 +182,7 @@ def test_all_series_with_many_series():
 def test_all_series_with_error():
     """Tests an error during the retrieval process."""
 
-    mock_log_error = Mock()
+    mock_log_error = MagicMock()
     ec.log_error = mock_log_error
 
     def invalid_series() -> list[dict]:
@@ -198,7 +198,7 @@ def test_all_series_with_error():
     mock_queries.select_all_series = invalid_series
     with pytest.raises(Exception):
         ec.get_all_series()
-        Mock.assert_called_once(mock_log_error)
+        MagicMock.assert_called_once(mock_log_error)
 
 
 def test_one_series():
