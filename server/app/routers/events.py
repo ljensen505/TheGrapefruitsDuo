@@ -3,8 +3,8 @@ from fastapi.security import HTTPAuthorizationCredentials
 from icecream import ic
 
 from app.admin import oauth2_http
-from app.controllers import controller
 from app.models.event import EventSeries, NewEventSeries
+from app.routers import controller
 
 router = APIRouter(
     prefix="/events",
