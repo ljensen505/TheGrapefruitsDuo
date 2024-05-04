@@ -22,19 +22,19 @@ class EventController(BaseController):
         super().__init__()
         self.db: EventQueries = event_queries
 
-    def _all_series(self, data: list[dict]) -> dict[str, EventSeries]:
+    def _all_series(self, data_rows: list[dict]) -> dict[str, EventSeries]:
         """Creates and returns a dictionary of EventSeries objects from a list of sql rows (as dicts).
         Should only be used internally.
 
         Args:
-            data (list[dict]): List of dicts, each representing a row from the database. `event_id` may be null
+            data_rows (list[dict]): List of dicts, each representing a row from the database. `event_id` may be null
 
         Returns:
             dict[str, EventSeries]: A dictionary of EventSeries objects, keyed by series name
         """
         all_series: dict[str, EventSeries] = {}
 
-        for event_series_row in data:
+        for event_series_row in data_rows:
             series_name: str = event_series_row["name"]
             if series_name not in all_series:
                 all_series[series_name] = EventSeries(**event_series_row, events=[])
