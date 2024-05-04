@@ -7,7 +7,7 @@ class UserQueries(BaseQueries):
         super().__init__()
         self.table = USER_TABLE
 
-    def get_one_by_email(self, email: str) -> dict | None:
+    def select_one_by_email(self, email: str) -> dict | None:
         query = f"SELECT * FROM {self.table} WHERE email = %s"
         db = self.connect_db()
         cursor = db.cursor(dictionary=True)
@@ -18,7 +18,7 @@ class UserQueries(BaseQueries):
 
         return data
 
-    def get_one_by_sub(self, sub: str) -> dict | None:
+    def select_one_by_sub(self, sub: str) -> dict | None:
         query = f"SELECT * FROM {self.table} WHERE sub = %s"
         db = self.connect_db()
         cursor = db.cursor(dictionary=True)

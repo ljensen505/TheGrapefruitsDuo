@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, Mock
+from unittest.mock import Mock
 
 import pytest
 from fastapi import HTTPException, UploadFile, status
@@ -8,7 +8,7 @@ from app.controllers.musicians import MusicianController
 from app.models.musician import Musician
 
 mock_queries = Mock()
-ec = MusicianController(musician_queries=mock_queries)
+mc = MusicianController(musician_queries=mock_queries)
 
 sample_data = [
     {
@@ -55,7 +55,7 @@ mock_queries.select_one_by_id = mock_select_one_by_id
 
 
 def test_type():
-    assert isinstance(ec, MusicianController)
+    assert isinstance(mc, MusicianController)
 
 
 """
@@ -68,7 +68,7 @@ TODO: write tests for following methods:
 
 
 def test_happy_get_musicians():
-    musicians = ec.get_musicians()
+    musicians = mc.get_musicians()
     assert isinstance(musicians, list)
     assert len(musicians) == 2
     for musician in musicians:
@@ -87,14 +87,14 @@ def test_happy_get_musicians():
 def test_sad_get_musicians():
     mock_queries.select_all_series = mock_select_all_series_sad
     with pytest.raises(HTTPException) as e:
-        ec.get_musicians()
+        mc.get_musicians()
     mock_queries.select_all_series = mock_select_all_series
     assert isinstance(e.value, HTTPException)
     assert e.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
 def test_happy_get_musician():
-    musician = ec.get_musician(1)
+    musician = mc.get_musician(1)
     assert isinstance(musician, Musician)
     assert musician.id == 1
     assert musician.name == "John Doe"
@@ -104,7 +104,7 @@ def test_happy_get_musician():
 
 def test_musician_not_found():
     with pytest.raises(HTTPException) as e:
-        ec.get_musician(3)
+        mc.get_musician(3)
     assert isinstance(e.value, HTTPException)
     assert e.value.status_code == status.HTTP_404_NOT_FOUND
     assert e.value.detail == "Musician not found"
