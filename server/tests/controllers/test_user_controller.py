@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi import HTTPException, status
@@ -7,7 +7,7 @@ from icecream import ic
 from app.controllers.users import UserController
 from app.models.user import User
 
-mock_queries = Mock()
+mock_queries = MagicMock()
 uc = UserController(user_queries=mock_queries)
 
 valid_user_data = [

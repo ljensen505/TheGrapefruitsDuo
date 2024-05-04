@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi import HTTPException, status
@@ -7,7 +7,7 @@ from icecream import ic
 from app.controllers.group import GroupController
 from app.models.group import Group
 
-mock_queries = Mock()
+mock_queries = MagicMock()
 gc = GroupController(group_queries=mock_queries)
 
 valid_group_data = {
@@ -51,9 +51,9 @@ def test_update_group_bio():
     method in the queries module is called with the correct arguments.
     """
     new_bio = "New Bio"
-    mock_queries.update_group_bio = Mock()
+    mock_queries.update_group_bio = MagicMock()
     mock_queries.select_one_by_id.return_value = valid_group_data
 
     group = gc.update_group_bio(new_bio)
-    Mock.assert_called_once_with(mock_queries.update_group_bio, new_bio)
+    MagicMock.assert_called_once_with(mock_queries.update_group_bio, new_bio)
     assert isinstance(group, Group)

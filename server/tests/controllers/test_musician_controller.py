@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi import HTTPException, UploadFile, status
@@ -7,7 +7,7 @@ from icecream import ic
 from app.controllers.musicians import MusicianController
 from app.models.musician import Musician
 
-mock_queries = Mock()
+mock_queries = MagicMock()
 mc = MusicianController(musician_queries=mock_queries)
 
 sample_data = [
