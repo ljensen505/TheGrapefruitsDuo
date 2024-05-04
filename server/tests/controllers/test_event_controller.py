@@ -22,23 +22,21 @@ def test_type():
     assert isinstance(ec, EventController)
 
 
-@pytest.mark.asyncio
-async def test_all_series_with_no_data():
+def test_all_series_with_no_data():
     """Tests with absent data."""
 
-    async def no_series() -> list[dict]:
+    def no_series() -> list[dict]:
         return []
 
     mock_queries.select_all_series = no_series
-    result = await ec.get_all_series()
+    result = ec.get_all_series()
     assert result == []
 
 
-@pytest.mark.asyncio
-async def test_all_series_with_basic_data():
+def test_all_series_with_basic_data():
     """Tests a single valid row with no event info"""
 
-    async def one_series_with_no_events() -> list[dict]:
+    def one_series_with_no_events() -> list[dict]:
         return [
             {
                 "name": "Test Series",
@@ -49,7 +47,7 @@ async def test_all_series_with_basic_data():
         ]
 
     mock_queries.select_all_series = one_series_with_no_events
-    result = await ec.get_all_series()
+    result = ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 1
     series = result[0]
@@ -61,8 +59,7 @@ async def test_all_series_with_basic_data():
     assert series.events == []
 
 
-@pytest.mark.asyncio
-async def test_all_series_with_detailed_data():
+def test_all_series_with_detailed_data():
     """Tests a single valid row with event info"""
 
     series_id = 1
@@ -70,7 +67,7 @@ async def test_all_series_with_detailed_data():
     series_description = "Pieces by Danzi, Gomez, Gounod, Grant, and Rusnak!"
     poster_id = "The_Grapefruits_Present_qhng6y"
 
-    async def one_series_with_events() -> list[dict]:
+    def one_series_with_events() -> list[dict]:
 
         row_1 = {
             "series_id": series_id,
@@ -108,7 +105,7 @@ async def test_all_series_with_detailed_data():
         ]
 
     mock_queries.select_all_series = one_series_with_events
-    result = await ec.get_all_series()
+    result = ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 1
     series = result[0]
@@ -148,11 +145,10 @@ async def test_all_series_with_detailed_data():
     assert e3.time == datetime(2024, 6, 23, 15, 0)
 
 
-@pytest.mark.asyncio
-async def test_all_series_with_many_series():
+def test_all_series_with_many_series():
     """Tests multiple series with no events."""
 
-    async def many_series() -> list[dict]:
+    def many_series() -> list[dict]:
         return [
             {
                 "name": "Test Series",
@@ -175,7 +171,7 @@ async def test_all_series_with_many_series():
         ]
 
     mock_queries.select_all_series = many_series
-    result = await ec.get_all_series()
+    result = ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 3
     for series in result:
@@ -183,14 +179,13 @@ async def test_all_series_with_many_series():
         assert series.events == []
 
 
-@pytest.mark.asyncio
-async def test_all_series_with_error():
+def test_all_series_with_error():
     """Tests an error during the retrieval process."""
 
     mock_log_error = Mock()
     ec.log_error = mock_log_error
 
-    async def invalid_series() -> list[dict]:
+    def invalid_series() -> list[dict]:
         # no series name
         return [
             {
@@ -202,13 +197,12 @@ async def test_all_series_with_error():
 
     mock_queries.select_all_series = invalid_series
     with pytest.raises(Exception):
-        await ec.get_all_series()
+        ec.get_all_series()
         Mock.assert_called_once(mock_log_error)
 
 
-@pytest.mark.asyncio
-async def test_one_series():
-    async def one_series_no_events(series_id: int) -> list[dict]:
+def test_one_series():
+    def one_series_no_events(series_id: int) -> list[dict]:
         return [
             {
                 "series_id": series_id,
@@ -219,7 +213,7 @@ async def test_one_series():
         ]
 
     mock_queries.select_one_by_id = one_series_no_events
-    series = await ec.get_one_series_by_id(1)
+    series = ec.get_one_series_by_id(1)
     assert isinstance(series, EventSeries)
     assert series.name == "Test Series"
     assert series.description == "Test Description"
@@ -228,9 +222,8 @@ async def test_one_series():
     assert series.events == []
 
 
-@pytest.mark.asyncio
-async def test_one_series_with_events():
-    async def one_series_with_events(series_id: int) -> list[dict]:
+def test_one_series_with_events():
+    def one_series_with_events(series_id: int) -> list[dict]:
         return [
             {
                 "series_id": series_id,
@@ -264,7 +257,7 @@ async def test_one_series_with_events():
         ]
 
     mock_queries.select_one_by_id = one_series_with_events
-    series = await ec.get_one_series_by_id(1)
+    series = ec.get_one_series_by_id(1)
     assert isinstance(series, EventSeries)
     assert series.name == "Test Series"
     assert series.description == "Test Description"

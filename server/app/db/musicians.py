@@ -11,7 +11,7 @@ class MusicianQueries(BaseQueries):
         super().__init__()
         self.table = MUSICIAN_TABLE
 
-    async def update_bio(self, musician: Musician, bio: str) -> None:
+    def update_bio(self, musician: Musician, bio: str) -> None:
         """Updates a musician's biography in the database.
 
         Args:
@@ -26,7 +26,7 @@ class MusicianQueries(BaseQueries):
         cursor.close()
         db.close()
 
-    async def update_headshot(self, musician: Musician, headshot_id: str) -> None:
+    def update_headshot(self, musician: Musician, headshot_id: str) -> None:
         """Updates a musician's headshot ID in the database.
         The image itself is stored with Cloudinary.
 
