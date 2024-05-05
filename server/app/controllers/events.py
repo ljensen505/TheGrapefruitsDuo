@@ -11,26 +11,26 @@ from app.models.event import Event, EventSeries, NewEventSeries
 
 class EventController(BaseController):
     """
-    Handles all event-related operations and serves as an intermediate controller between
-    the main controller and the model layer.
+    Handles all event-related operations.
     Inherits from BaseController, which provides logging and other generic methods.
-
-    Testing: pass a mocked EventQueries object to the constructor.
     """
 
-    def __init__(self, event_queries=event_queries) -> None:
+    def __init__(self, event_queries: EventQueries = event_queries) -> None:
+        """
+        Initializes the EventController with an EventQueries object.
+
+        :param EventQueries event_queries: object for querying event data, defaults to event_queries
+        """
         super().__init__()
         self.db: EventQueries = event_queries
 
     def _all_series(self, data_rows: list[dict]) -> dict[str, EventSeries]:
-        """Creates and returns a dictionary of EventSeries objects from a list of sql rows (as dicts).
-        Should only be used internally.
+        """
+        Builds a dictionary of EventSeries objects from a list of dictionaries.
+        Must only be used internally.
 
-        Args:
-            data_rows (list[dict]): List of dicts, each representing a row from the database. `event_id` may be null
-
-        Returns:
-            dict[str, EventSeries]: A dictionary of EventSeries objects, keyed by series name
+        :param list[dict] data_rows: The list of sql rows as dictionaries
+        :return dict[str, EventSeries]: A dictionary of EventSeries objects keyed by series name
         """
         all_series: dict[str, EventSeries] = {}
 
@@ -44,13 +44,11 @@ class EventController(BaseController):
         return all_series
 
     def get_all_series(self) -> list[EventSeries]:
-        """Retrieves all EventSeries objects from the database and returns them as a list.
+        """
+        Retrieves all EventSeries objects and returns them as a list.
 
-        Raises:
-            HTTPException: If any error occurs during the retrieval process (status code 500)
-
-        Returns:
-            list[EventSeries]: A list of EventSeries objects which are suitable for a response body
+        :raises HTTPException: If any error occurs (status code 500)
+        :return list[EventSeries]: A list of EventSeries objects suitable for a response body
         """
         series_data = self.db.select_all_series()
 
@@ -64,17 +62,13 @@ class EventController(BaseController):
             )
 
     def get_one_series_by_id(self, series_id: int) -> EventSeries:
-        """Builds and returns a single EventSeries object by its numeric ID.
+        """
+        Retrieves a single EventSeries object by numeric ID.
 
-        Args:
-            series_id (int): The numeric id of the series to retrieve
-
-        Raises:
-            HTTPException: If the series is not found (status code 404)
-            HTTPException:  If an error occurs (status code 500)
-
-        Returns:
-            EventSeries: A single EventSeries object
+        :param int series_id: The ID of the series to retrieve
+        :raises HTTPException: If the series is not found (status code 404)
+        :raises HTTPException: If any error occurs during the instantiation process (status code 500)
+        :return EventSeries: The EventSeries object which is suitable for a response body
         """
         if not (rows := self.db.select_one_by_id(series_id)):
             raise HTTPException(
@@ -91,16 +85,12 @@ class EventController(BaseController):
             )
 
     def create_series(self, series: NewEventSeries) -> EventSeries:
-        """Takes a NewEventSeries object and passes it to the database layer for insertion.
+        """
+        Passes a new EventSeries object to the database for creation and returns the created object.
 
-        Args:
-            series (NewEventSeries): A NewEventSeries object which does not yet have an ID
-
-        Raises:
-            HTTPException: If the series name already exists (status code 400)
-
-        Returns:
-            EventSeries: The newly created EventSeries object with an ID
+        :param NewEventSeries series: The new EventSeries object to create
+        :raises HTTPException: If the series name already exists (status code 400)
+        :return EventSeries: The created EventSeries object which is suitable for a response body
         """
         try:
             inserted_id = self.db.insert_one_series(series)
@@ -114,14 +104,12 @@ class EventController(BaseController):
             )
 
     def add_series_poster(self, series_id: int, poster: UploadFile) -> EventSeries:
-        """Adds (or updates) a poster image to a series.
+        """
+        Updates the poster image for an EventSeries object and returns the updated object.
 
-        Args:
-            series_id (int): The numeric ID of the series to update
-            poster (UploadFile): The image file to upload
-
-        Returns:
-            EventSeries: The updated EventSeries object
+        :param int series_id: The numeric ID of the series
+        :param UploadFile poster: The new poster image file
+        :return EventSeries: The updated EventSeries object with the new poster image
         """
         series = self.get_one_series_by_id(series_id)
         series.poster_id = self._upload_poster(poster)
@@ -129,17 +117,12 @@ class EventController(BaseController):
         return self.get_one_series_by_id(series.series_id)
 
     def _upload_poster(self, poster: UploadFile) -> str:
-        """Uploads a poster image to Cloudinary and returns the public ID for storage in the database.
-        Should only be used internally.
+        """
+        Uploads an image file to the cloud and returns the public ID.
 
-        Args:
-            poster (UploadFile): The image file to upload
-
-        Raises:
-            HTTPException: If an error occurs during the upload process (status code 500)
-
-        Returns:
-            str: The public ID of the uploaded image
+        :param UploadFile poster: The image file to upload
+        :raises HTTPException: If any error occurs during the upload process (status code 500)
+        :return str: The public ID of the uploaded image
         """
         image_file = self.verify_image(poster)
         try:
@@ -152,27 +135,23 @@ class EventController(BaseController):
             )
 
     def delete_series(self, id: int) -> None:
-        """Ensures an EventSeries object exists and then deletes it from the database.
+        """
+        Deletes an EventSeries object from the database.
 
-        Args:
-            id (int): The numeric ID of the series to delete
+        :param int id: The numeric ID of the series to delete
         """
         series = self.get_one_series_by_id(id)
         self.db.delete_one_series(series)
 
     def update_series(self, route_id: int, series: EventSeries) -> EventSeries:
-        """Updates an existing EventSeries object in the database.
+        """
+        Updates an EventSeries object in the database and returns the updated object.
 
-        Args:
-            route_id (int): The numeric ID of the series in the URL
-            series (EventSeries): The updated EventSeries object
-
-        Raises:
-            HTTPException: if the ID in the URL does not match the ID in the request body (status code 400)
-            HTTPException: if the poster ID is updated directly (status code 400)
-
-        Returns:
-            EventSeries: The updated EventSeries object with updated info
+        :param int route_id: The numeric ID in the URL
+        :param EventSeries series: The updated EventSeries object
+        :raises HTTPException: If the ID in the URL does not match the ID in the request body (status code 400)
+        :raises HTTPException: If the poster ID is updated directly (status code 400)
+        :return EventSeries: The updated EventSeries object which is suitable for a response body
         """
         if route_id != series.series_id:
             raise HTTPException(

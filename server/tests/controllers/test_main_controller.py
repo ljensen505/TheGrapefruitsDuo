@@ -1,14 +1,10 @@
 from unittest.mock import MagicMock
 
 import pytest
-from fastapi import HTTPException, status
-from icecream import ic
 
 from app.controllers.controller import MainController
-from app.models.event import Event, EventSeries, NewEventSeries
-from app.models.group import Group
+from app.models.event import EventSeries, NewEventSeries
 from app.models.musician import Musician
-from app.models.user import User
 
 mock_user_controller = MagicMock()
 mock_musician_controller = MagicMock()

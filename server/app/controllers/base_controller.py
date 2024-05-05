@@ -17,21 +17,21 @@ class BaseController:
     """
 
     def __init__(self) -> None:
+        """
+        Initializes the BaseController with a BaseQueries object.
+        """
         self.db: BaseQueries = None  # type: ignore
         self.ALL_FILES = ALLOWED_FILES_TYPES
         self.MAX_FILE_SIZE = ONE_MB
 
     def verify_image(self, file: UploadFile) -> bytes:
-        """Verifies that the file is an image and is within the maximum file size.
+        """
+        Verifies that the file is an image and is within the maximum file size.
 
-        Args:
-            file (UploadFile): The file to be verified
-
-        Raises:
-            HTTPException: If the file is not an image or exceeds the maximum file size (status code 400)
-
-        Returns:
-            bytes: The file contents as bytes
+        :param UploadFile file: The file to be verified
+        :raises HTTPException: If the file type is not allowed (status code 400)
+        :raises HTTPException: If the file size exceeds the maximum (status code 400)
+        :return bytes: The image file as bytes
         """
         if file.content_type not in self.ALL_FILES:
             raise HTTPException(
@@ -48,10 +48,10 @@ class BaseController:
         return image_file
 
     def log_error(self, e: Exception) -> None:
-        """Logs an error to a timestamped text file in the logs directory.
+        """
+        Logs an error to a timestamped text file in the logs directory.
 
-        Args:
-            e (Exception): Any exception object
+        :param Exception e: The exception to be logged
         """
         curr_dir = Path(__file__).parent
         log_dir = curr_dir / "logs"

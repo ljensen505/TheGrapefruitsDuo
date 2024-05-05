@@ -10,26 +10,25 @@ from app.models.user import User
 
 class UserController(BaseController):
     """
-    Handles all user-related operations and serves as an intermediate controller between
-    the main controller and the model layer.
-
+    Handles all user-related operations.
     Inherits from BaseController, which provides logging and other generic methods.
-
-    Testing: pass a mocked UserQueries object to the constructor.
     """
 
-    def __init__(self, user_queries=user_queries) -> None:
+    def __init__(self, user_queries: UserQueries = user_queries) -> None:
+        """
+        Initializes the UserController with a UserQueries object.
+
+        :param UserQueries user_queries: object for querying user data, defaults to user_queries
+        """
         super().__init__()
         self.db: UserQueries = user_queries
 
     def get_users(self) -> list[User]:
-        """Retrieves all users from the database and returns them as a list of User objects.
+        """
+        Retrieves all users and returns them as a list.
 
-        Raises:
-            HTTPException: If any error occurs during the retrieval process (status code 500)
-
-        Returns:
-            list[User]: A list of User objects which are suitable for a response body
+        :raises HTTPException: If any error occurs during the retrieval process (status code 500)
+        :return list[User]: A list of User objects suitable for a response body
         """
         data = self.db.select_all_series()
         try:
@@ -41,17 +40,13 @@ class UserController(BaseController):
             )
 
     def get_user_by_id(self, user_id: int) -> User:
-        """Retrieves a single user from the database and returns it as a User object.
+        """
+        Retrieves a single user from the database and returns it as a User object.
 
-        Args:
-            user_id (int): The ID of the user to retrieve
-
-        Raises:
-            HTTPException: If the user is not found (status code 404)
-            HTTPException: If any error occurs during the retrieval process (status code 500)
-
-        Returns:
-            User: A User object which is suitable for a response body
+        :param int user_id: The ID of the user to retrieve
+        :raises HTTPException: If the user is not found (status code 404)
+        :raises HTTPException: If any error occurs during the retrieval process (status code 500)
+        :return User: A User object which is suitable for a response body
         """
         if (data := self.db.select_one_by_id(user_id)) is None:
             raise HTTPException(
@@ -66,17 +61,13 @@ class UserController(BaseController):
             )
 
     def get_user_by_email(self, email: str) -> User:
-        """Retrieves a single user from the database and returns it as a User object.
+        """
+        Retrieves a single user from the database and returns it as a User object.
 
-        Args:
-            email (str): The email of the user to retrieve
-
-        Raises:
-            HTTPException: If the user is not found (status code 404)
-            HTTPException: If any error occurs during the retrieval process (status code 500)
-
-        Returns:
-            User: A User object which is suitable for a response body
+        :param str email: The email of the user to retrieve
+        :raises HTTPException: If the user is not found (status code 404)
+        :raises HTTPException: If any error occurs during the retrieval process (status code 500)
+        :return User: A User object which is suitable for a response body
         """
         if (data := self.db.select_one_by_email(email)) is None:
             raise HTTPException(
@@ -91,17 +82,13 @@ class UserController(BaseController):
             )
 
     def get_user_by_sub(self, sub: str) -> User:
-        """Retrieves a single user from the database and returns it as a User object.
+        """
+        Retrieves a single user from the database and returns it as a User object.
 
-        Args:
-            sub (str): The sub of the user to retrieve
-
-        Raises:
-            HTTPException: If the user is not found (status code 404)
-            HTTPException: If any error occurs during the retrieval process (status code 500)
-
-        Returns:
-            User: A User object which is suitable for a response body
+        :param str sub: The sub of the user to retrieve
+        :raises HTTPException: If the user is not found (status code 404)
+        :raises HTTPException: If any error occurs during the retrieval process (status code 500)
+        :return User: A User object which is suitable for a response body
         """
         if (data := self.db.select_one_by_sub(sub)) is None:
             raise HTTPException(
@@ -116,13 +103,11 @@ class UserController(BaseController):
             )
 
     def create_user(self, token: HTTPAuthorizationCredentials) -> User:
-        """Updates a user's sub in the database and creates a new User object.
+        """
+        Creates a new user in the database and returns the created User object.
 
-        Args:
-            token (HTTPAuthorizationCredentials): The token containing the user's email and sub
-
-        Returns:
-            User: A User object which is suitable for a response body
+        :param HTTPAuthorizationCredentials token: The OAuth token
+        :return User: The created User object which is suitable for a response body
         """
         email, sub = oauth_token.email_and_sub(token)
         user: User = self.get_user_by_email(email)
