@@ -7,3 +7,6 @@ EVENT_TABLE = "events"
 GROUP_TABLE = "group_table"
 MUSICIAN_TABLE = "musicians"
 USER_TABLE = "users"
+
+# contact form email
+HOST = "grapefruitswebsite@gmail.com"

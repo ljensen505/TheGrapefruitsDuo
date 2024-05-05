@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import HTTPException, UploadFile, status
 from icecream import ic
 
@@ -10,25 +12,25 @@ from app.models.musician import Musician
 
 class MusicianController(BaseController):
     """
-    Handles all musician-related operations and serves as an intermediate controller between
-    the main controller and the model layer.
+    Handles all musician-related operations.
     Inherits from BaseController, which provides logging and other generic methods.
-
-    Testing: pass a mocked MusicianQueries object to the constructor.
     """
 
-    def __init__(self, musician_queries=musician_queries) -> None:
+    def __init__(self, musician_queries: MusicianQueries = musician_queries) -> None:
+        """
+        Initializes the MusicianController with a MusicianQueries object.
+
+        :param MusicianQueries musician_queries: object for querying musician data, defaults to musician_queries
+        """
         super().__init__()
         self.db: MusicianQueries = musician_queries
 
     def get_musicians(self) -> list[Musician]:
-        """Retrieves all musicians from the database and returns them as a list of Musician objects.
+        """
+        Retrieves all musicians and returns them as a list.
 
-        Raises:
-            HTTPException: If any error occurs during the retrieval process (status code 500)
-
-        Returns:
-            list[Musician]: A list of Musician objects which are suitable for a response body
+        :raises HTTPException: If any error occurs during the retrieval process (status code 500)
+        :return list[Musician]: A list of Musician objects suitable for a response body
         """
         data = self.db.select_all_series()
         try:
@@ -40,17 +42,13 @@ class MusicianController(BaseController):
             )
 
     def get_musician(self, musician_id: int) -> Musician:
-        """Retrieves a single musician from the database and returns it as a Musician object.
+        """
+        Retrieves a single musician by numeric ID.
 
-        Args:
-            id (int): The ID of the musician to retrieve
-
-        Raises:
-            HTTPException: If the musician is not found (status code 404)
-            HTTPException: If any error occurs during the retrieval process (status code 500)
-
-        Returns:
-            Musician: A Musician object which is suitable for a response body
+        :param int musician_id: The ID of the musician to retrieve
+        :raises HTTPException: If the musician is not found (status code 404)
+        :raises HTTPException: If any error occurs during the instantiation process (status code 500)
+        :return Musician: The musician object for a response body
         """
         if (data := self.db.select_one_by_id(musician_id)) is None:
             raise HTTPException(
@@ -68,20 +66,16 @@ class MusicianController(BaseController):
         self,
         musician_id: int,
         new_bio: str,
-        file: UploadFile | None = None,
+        file: Optional[UploadFile] = None,
     ) -> Musician:
-        """Updates a musician's bio and/or headshot by conditionally calling the appropriate methods.
+        """
+        Updates a musician in the database and returns the updated musician object.
 
-        Args:
-            musician_id (int): The numeric ID of the musician to update
-            new_bio (str): The new biography for the musician
-            file (UploadFile | None, optional): The new headshot file. Defaults to None.
-
-        Raises:
-            HTTPException: If the musician is not found (status code 404)
-
-        Returns:
-            Musician: The updated Musician object
+        :param int musician_id: The ID of the musician to update
+        :param str new_bio: The new biography for the musician
+        :param Optional[UploadFile] file: The new headshot file, defaults to None
+        :raises HTTPException: _description_
+        :return Musician: _description_
         """
         musician = self.get_musician(musician_id)
         if new_bio != musician.bio:
@@ -97,17 +91,13 @@ class MusicianController(BaseController):
     def _update_musician_headshot(
         self, musician: Musician, headshot_id: str
     ) -> Musician:
-        """Updates a musician's headshot in the database.
+        """
+        Updates a musician's headshot in the database.
 
-        Args:
-            musician (Musician): The musician object to update
-            headshot_id (str): The public ID of the new headshot (as determined by Cloudinary)
-
-        Raises:
-            HTTPException: If any error occurs during the update process (status code 500)
-
-        Returns:
-            Musician: The updated Musician object
+        :param Musician musician: The musician object to update
+        :param str headshot_id: The new public ID for the headshot
+        :raises HTTPException: If any error occurs during the update process (status code 500)
+        :return Musician: The updated Musician object
         """
         try:
             self.db.update_headshot(musician, headshot_id)
@@ -119,17 +109,13 @@ class MusicianController(BaseController):
         return self.get_musician(musician.id)
 
     def _update_musician_bio(self, musician: Musician, bio: str) -> Musician:
-        """Updates a musician's bio in the database.
+        """
+        Updates a musician's biography in the database.
 
-        Args:
-            musician (Musician): The musician object to update
-            bio (str): The new biography for the musician
-
-        Raises:
-            HTTPException: If any error occurs during the update process (status code 500)
-
-        Returns:
-            Musician: The updated Musician object
+        :param Musician musician: The musician object to update
+        :param str bio: The new biography for the musician
+        :raises HTTPException: If any error occurs during the update process (status code 500)
+        :return Musician: The updated Musician object
         """
         try:
             self.db.update_bio(musician, bio)
@@ -141,17 +127,13 @@ class MusicianController(BaseController):
         return self.get_musician(musician.id)
 
     def _upload_headshot(self, musician: Musician, file: UploadFile) -> Musician:
-        """Uploads a new headshot for a musician and updates the database with the new public ID.
+        """
+        Uploads a new headshot image for a musician and returns the updated musician object.
 
-        Args:
-            musician (Musician): The musician object to update
-            file (UploadFile): The new headshot file
-
-        Raises:
-            HTTPException: If the file is not an image or exceeds the maximum file size (status code 400)
-
-        Returns:
-            Musician: The updated Musician object
+        :param Musician musician: The musician object to update
+        :param UploadFile file: The new headshot file
+        :raises HTTPException: If any error occurs during the upload process (status code 500)
+        :return Musician: The updated Musician object
         """
         image_file = self.verify_image(file)
         data = uploader.upload(image_file)

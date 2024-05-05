@@ -2,10 +2,16 @@ import smtplib
 from email.mime.text import MIMEText
 from os import getenv
 
-HOST = "grapefruitswebsite@gmail.com"
+from app.constants import HOST
 
 
 def send_email(subject: str, body: str) -> None:
+    """
+    Sends an email using the Gmail SMTP server.
+
+    :param str subject: The subject of the email
+    :param str body: The body of the email
+    """
     password = getenv("APP_PASSWORD")
     email = getenv("EMAIL")
     msg = MIMEText(body)
