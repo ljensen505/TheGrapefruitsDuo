@@ -70,11 +70,13 @@ series1 = EventSeries(
             time=datetime(2024, 6, 16, 16),
             event_id=0,
             map_url="https://maps.app.goo.gl/hNfN8X5FBZLg8LDF8",  # type: ignore
+            ticket_url="https://ticketstripe.com/events/1060105231246319",  # type: ignore
         ),
         Event(
             location="First Church of Christ, Scientist, Eugene",
             time=datetime(2024, 6, 23, 15),
             event_id=0,
+            ticket_url="https://ticketstripe.com/events/2639105231322634",  # type: ignore
         ),
     ],
     series_id=0,

@@ -37,7 +37,12 @@ function Event(props: EventProps) {
   });
   const location = event.map_url ? (
     <>
-      <a href={event.map_url} target="_blank" rel="noreferrer">
+      <a
+        href={event.map_url}
+        target="_blank"
+        rel="noreferrer"
+        className="external-link"
+      >
         {event.location}
       </a>
     </>
@@ -47,7 +52,12 @@ function Event(props: EventProps) {
   const tickets = event.ticket_url ? (
     <>
       |{" "}
-      <a href={event.ticket_url} target="_blank" rel="noreferrer">
+      <a
+        href={event.ticket_url}
+        target="_blank"
+        rel="noreferrer"
+        className="external-link"
+      >
         Tickets
       </a>
     </>
