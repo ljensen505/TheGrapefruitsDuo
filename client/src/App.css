@@ -66,3 +66,26 @@ body {
   border: 0px solid transparent !important;
   color: var(--group-info-color) !important;
 }
+
+.external-link {
+  color: var(--external-link-color-blue);
+}
+
+.external-link:hover {
+  color: var(--external-link-color-blue);
+  background-color: rgb(7, 0, 132, 0.1);
+}
+
+.external-link:active {
+  color: var(--external-link-color-blue);
+  background-color: rgb(7, 0, 132, 0.1);
+}
+
+.external-link:focus {
+  color: var(--external-link-color-blue);
+  background-color: rgb(7, 0, 132, 0.1);
+}
+
+.external-link:se .external-link:visited {
+  color: var(--external-link-color-blue);
+}
