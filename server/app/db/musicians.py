@@ -20,7 +20,9 @@ class MusicianQueries(BaseQueries):
         """
         db = connect_db()
         cursor = db.cursor()
-        query = f"UPDATE {self.table} SET bio = %s WHERE id = %s"
+        query = f"""-- sql
+            UPDATE {self.table} SET bio = %s WHERE id = %s
+            """
         cursor.execute(query, (bio, musician.id))
         db.commit()
         cursor.close()
@@ -36,7 +38,9 @@ class MusicianQueries(BaseQueries):
         """
         db = connect_db()
         cursor = db.cursor()
-        query = f"UPDATE {self.table} SET headshot_id = %s WHERE id = %s"
+        query = f"""-- sql
+            UPDATE {self.table} SET headshot_id = %s WHERE id = %s
+            """
         cursor.execute(query, (headshot_id, musician.id))
         db.commit()
         cursor.close()

@@ -32,7 +32,7 @@ class MusicianController(BaseController):
         :raises HTTPException: If any error occurs during the retrieval process (status code 500)
         :return list[Musician]: A list of Musician objects suitable for a response body
         """
-        data = self.db.select_all_series()
+        data = self.db.select_all()
         try:
             return [Musician(**m) for m in data]
         except Exception as e:

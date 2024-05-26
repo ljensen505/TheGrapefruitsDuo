@@ -82,32 +82,13 @@ series1 = EventSeries(
     series_id=0,
 )
 
-# series2 = EventSeries(
-#     name="The Grapefruits Duo Features: Solos for Bass Trombone",
-#     description="Pieces by Ewazen, Bozza, and more!",
-#     events=[
-#         Event(
-#             location="Eugene Family YMCA",
-#             time=datetime(2024, 7, 1, 17, 30),
-#             event_id=0,
-#         ),
-#         Event(
-#             location="Tobi's Crate",
-#             time=datetime(2024, 7, 2, 20),
-#             event_id=0,
-#             ticket_url="http://www.example.com",  # type: ignore
-#         ),
-#     ],
-#     id=0,
-# )
-
 
 def seed():
     confirmation = input(
         "Are you sure you want to seed the database? Data will be lost. [Y/n]: "
     )
     if confirmation.lower() not in ["y", "yes", ""]:
-        print("Exiting")
+        print("Exiting without changes")
         return
     print("Seeding database")
     add_musicians()
@@ -121,10 +102,12 @@ def add_group():
     db = connect_db()
     cursor = db.cursor()
     cursor.execute(
-        f"DROP TABLE IF EXISTS {GROUP_TABLE};",
+        f"""-- sql
+        DROP TABLE IF EXISTS {GROUP_TABLE};
+        """,
     )
     cursor.execute(
-        f"""
+        f"""-- sql
         CREATE TABLE {GROUP_TABLE} (
             id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
@@ -134,7 +117,9 @@ def add_group():
         """
     )
     cursor.execute(
-        f"INSERT INTO {GROUP_TABLE} (name, bio) VALUES (%s, %s);",
+        f"""-- sql
+        INSERT INTO {GROUP_TABLE} (name, bio) VALUES (%s, %s);
+        """,
         (tgd.name, tgd.bio),
     )
     db.commit()
@@ -146,10 +131,12 @@ def add_users():
     db = connect_db()
     cursor = db.cursor()
     cursor.execute(
-        f"DROP TABLE IF EXISTS {USER_TABLE};",
+        f"""-- sql
+        DROP TABLE IF EXISTS {USER_TABLE};
+        """,
     )
     cursor.execute(
-        f"""
+        f"""-- sql
         CREATE TABLE {USER_TABLE} (
             id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
@@ -161,7 +148,9 @@ def add_users():
     )
     for u in [coco_user, margarite_user, lucas_user, tgd_user, tgd_website]:
         cursor.execute(
-            f"INSERT INTO {USER_TABLE} (name, email, sub) VALUES (%s, %s, %s);",
+            f"""-- sql
+            INSERT INTO {USER_TABLE} (name, email, sub) VALUES (%s, %s, %s);
+            """,
             (u.name, u.email, u.sub),
         )
 
@@ -175,10 +164,12 @@ def add_musicians():
     db = connect_db()
     cursor = db.cursor()
     cursor.execute(
-        f"DROP TABLE IF EXISTS {MUSICIAN_TABLE};",
+        f"""-- sql
+        DROP TABLE IF EXISTS {MUSICIAN_TABLE};
+        """,
     )
     cursor.execute(
-        f"""
+        f"""-- sql
         CREATE TABLE {MUSICIAN_TABLE} (
             id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
@@ -190,7 +181,9 @@ def add_musicians():
     )
     for m in [margarite, coco]:
         cursor.execute(
-            f"INSERT INTO {MUSICIAN_TABLE} (name, bio, headshot_id) VALUES (%s, %s, %s);",
+            f"""-- sql
+            INSERT INTO {MUSICIAN_TABLE} (name, bio, headshot_id) VALUES (%s, %s, %s);
+            """,
             (m.name, m.bio, m.headshot_id),
         )
 
@@ -204,13 +197,17 @@ def add_events():
     db = connect_db()
     cursor = db.cursor()
     cursor.execute(
-        f"DROP TABLE IF EXISTS {EVENT_TABLE};",
+        f"""-- sql
+        DROP TABLE IF EXISTS {EVENT_TABLE};
+        """,
     )
     cursor.execute(
-        f"DROP TABLE IF EXISTS {SERIES_TABLE};",
+        f"""-- sql
+        DROP TABLE IF EXISTS {SERIES_TABLE};
+        """,
     )
     cursor.execute(
-        f"""
+        f"""-- sql
         CREATE TABLE {SERIES_TABLE} (
             series_id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL UNIQUE,
@@ -221,7 +218,7 @@ def add_events():
         """
     )
     cursor.execute(
-        f"""
+        f"""-- sql
         CREATE TABLE {EVENT_TABLE} (
             event_id INT NOT NULL AUTO_INCREMENT,
             series_id INT NOT NULL,
@@ -237,7 +234,9 @@ def add_events():
 
     for series in [series1]:
         cursor.execute(
-            f"INSERT INTO {SERIES_TABLE} (name, description, poster_id) VALUES (%s, %s, %s);",
+            f"""-- sql
+            INSERT INTO {SERIES_TABLE} (name, description, poster_id) VALUES (%s, %s, %s);
+            """,
             (
                 series.name,
                 series.description,
@@ -252,7 +251,9 @@ def add_events():
             ticket_url = str(event.ticket_url) if event.ticket_url else None
             map_url = str(event.map_url) if event.map_url else None
             cursor.execute(
-                f"INSERT INTO {EVENT_TABLE} (series_id, location, time, ticket_url, map_url) VALUES (%s, %s, %s, %s, %s);",
+                f"""-- sql
+                INSERT INTO {EVENT_TABLE} (series_id, location, time, ticket_url, map_url) VALUES (%s, %s, %s, %s, %s);
+                """,
                 (
                     series.series_id,
                     event.location,
