@@ -1,6 +1,8 @@
 from typing import Callable
 
 from icecream import ic
+from mysql.connector.connection import MySQLConnection
+from mysql.connector.cursor import MySQLCursor
 
 from app.db.conn import connect_db
 
@@ -15,25 +17,39 @@ class BaseQueries:
 
     def __init__(self) -> None:
         self.table: str = None  # type: ignore
-        self.connect_db: Callable = connect_db
+        self.connect_db: Callable[[], MySQLConnection] = connect_db
 
-    def select_all_series(self) -> list[dict]:
-        query = f"SELECT * FROM {self.table}"
-        db = connect_db()
-        cursor = db.cursor(dictionary=True)
+    def select_all(self) -> list[dict]:
+        query = f"""-- sql
+            SELECT * FROM {self.table}
+            """
+        cursor, conn = self.get_cursor_and_conn()
         cursor.execute(query)
-        data = cursor.fetchall()
-        cursor.close()
-        db.close()
-        return data  # type: ignore
+        data: list[dict] = cursor.fetchall()  # type: ignore
+        self.close_cursor_and_conn(cursor, conn)
+
+        fake_query = f"""-- sql
+            select * from dogs
+        """
+
+        return data
 
     def select_one_by_id(self, id: int) -> dict | None:
-        query = f"SELECT * FROM {self.table} WHERE id = %s"
-        db = self.connect_db()
-        cursor = db.cursor(dictionary=True)
+        query = f"""-- sql
+            SELECT * FROM {self.table} WHERE id = %s
+            """
+        cursor, conn = self.get_cursor_and_conn()
         cursor.execute(query, (id,))
-        data = cursor.fetchone()
-        cursor.close()
-        db.close()
+        data: dict | None = cursor.fetchone()  # type: ignore
+        self.close_cursor_and_conn(cursor, conn)
 
-        return data  # type: ignore
+        return data
+
+    def get_cursor_and_conn(self) -> tuple[MySQLCursor, MySQLConnection]:
+        conn = self.connect_db()
+        cursor = conn.cursor(dictionary=True)
+        return cursor, conn
+
+    def close_cursor_and_conn(self, cursor: MySQLCursor, conn: MySQLConnection) -> None:
+        cursor.close()
+        conn.close()

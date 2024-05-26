@@ -28,7 +28,7 @@ def test_all_series_with_no_data():
     def no_series() -> list[dict]:
         return []
 
-    mock_queries.select_all_series = no_series
+    mock_queries.select_all = no_series
     result = ec.get_all_series()
     assert result == []
 
@@ -46,7 +46,7 @@ def test_all_series_with_basic_data():
             }
         ]
 
-    mock_queries.select_all_series = one_series_with_no_events
+    mock_queries.select_all = one_series_with_no_events
     result = ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 1
@@ -104,7 +104,7 @@ def test_all_series_with_detailed_data():
             row_3,
         ]
 
-    mock_queries.select_all_series = one_series_with_events
+    mock_queries.select_all = one_series_with_events
     result = ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 1
@@ -170,7 +170,7 @@ def test_all_series_with_many_series():
             },
         ]
 
-    mock_queries.select_all_series = many_series
+    mock_queries.select_all = many_series
     result = ec.get_all_series()
     assert isinstance(result, list)
     assert len(result) == 3
@@ -195,7 +195,7 @@ def test_all_series_with_error():
             }
         ]
 
-    mock_queries.select_all_series = invalid_series
+    mock_queries.select_all = invalid_series
     with pytest.raises(Exception):
         ec.get_all_series()
         MagicMock.assert_called_once(mock_log_error)

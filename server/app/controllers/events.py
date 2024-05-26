@@ -50,7 +50,7 @@ class EventController(BaseController):
         :raises HTTPException: If any error occurs (status code 500)
         :return list[EventSeries]: A list of EventSeries objects suitable for a response body
         """
-        series_data = self.db.select_all_series()
+        series_data = self.db.select_all()
 
         try:
             return [series for series in self._all_series(series_data).values()]

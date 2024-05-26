@@ -30,7 +30,7 @@ class UserController(BaseController):
         :raises HTTPException: If any error occurs during the retrieval process (status code 500)
         :return list[User]: A list of User objects suitable for a response body
         """
-        data = self.db.select_all_series()
+        data = self.db.select_all()
         try:
             return [User(**e) for e in data]
         except Exception as e:

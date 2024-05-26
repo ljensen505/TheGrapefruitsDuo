@@ -60,7 +60,7 @@ def test_type():
 
 def test_get_users():
     """Tests the retrieval of users from the database."""
-    mock_queries.select_all_series.return_value = valid_user_data
+    mock_queries.select_all.return_value = valid_user_data
     users = uc.get_users()
     assert isinstance(users, list)
     assert len(users) == 2
@@ -85,7 +85,7 @@ def test_get_users():
 
 def test_get_users_sad():
     """Tests the retrieval of users from the database with invalid data."""
-    mock_queries.select_all_series.return_value = invalid_user_data
+    mock_queries.select_all.return_value = invalid_user_data
     with pytest.raises(HTTPException) as e:
         uc.get_users()
     assert isinstance(e.value, HTTPException)

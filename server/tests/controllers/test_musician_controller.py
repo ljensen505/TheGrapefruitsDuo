@@ -50,7 +50,7 @@ def mock_select_one_by_id(musician_id: int):
     return None
 
 
-mock_queries.select_all_series = mock_select_all_series
+mock_queries.select_all = mock_select_all_series
 mock_queries.select_one_by_id = mock_select_one_by_id
 
 
@@ -85,10 +85,10 @@ def test_happy_get_musicians():
 
 
 def test_sad_get_musicians():
-    mock_queries.select_all_series = mock_select_all_series_sad
+    mock_queries.select_all = mock_select_all_series_sad
     with pytest.raises(HTTPException) as e:
         mc.get_musicians()
-    mock_queries.select_all_series = mock_select_all_series
+    mock_queries.select_all = mock_select_all_series
     assert isinstance(e.value, HTTPException)
     assert e.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
 
