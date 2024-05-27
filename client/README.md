@@ -9,11 +9,11 @@ The customer-facing page for this SPA is relatively simple. It includes sections
 ### Getting started
 
 ```bash
-git clone https://github.com/ljensen505/thegrapefruitsduo-front
+git clone git@github.com:ljensen505/TheGrapefruitsDuo.git
 ```
 
 ```bash
-cd thegrapefruitsduo-front
+cd client
 ```
 
 ```bash
@@ -36,10 +36,9 @@ Initialized with Vite.
 ### Deployment Info
 
 - Hosted on a Linode server running Ubuntu 22.04
-- Reverse proxy managed with Nginx on port 6001
+- Reverse proxy managed with Nginx
 - SSL certificate provided by Let's Encrypt
 - Managed with systemd
-- DNS managed with Google Domains (for now...)
 
 ### Development Notes
 

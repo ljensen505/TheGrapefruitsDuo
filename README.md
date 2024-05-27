@@ -6,8 +6,8 @@ This repo is for Eugene based chamber duo, The Grapefruits Duo. It roughly follo
 
 More info on each part of the project can be found in their respective directories, along with setup instructions. The application is served from a Linode Ubuntu 22.04 instance running NGINX and SSL certificates from Let's Encrypt.
 
-[Client](https://github.com/ljensen505/TheGrapefruitsDuo/tree/main/client)
-[Server](https://github.com/ljensen505/TheGrapefruitsDuo/tree/main/server)
+- [Client](https://github.com/ljensen505/TheGrapefruitsDuo/tree/main/client)
+- [Server](https://github.com/ljensen505/TheGrapefruitsDuo/tree/main/server)
 
 ## Auth
 
