@@ -1,9 +1,8 @@
 from datetime import datetime
 from unittest.mock import MagicMock
 
+from pydantic import HttpUrl
 import pytest
-from icecream import ic
-from pydantic_core import Url
 
 from app.controllers.events import EventController
 from app.models.event import Event, EventSeries
@@ -123,9 +122,9 @@ def test_all_series_with_detailed_data():
         assert isinstance(e.time, datetime)
         assert e.event_id is not None
         if e.map_url is not None:
-            assert isinstance(e.map_url, Url)
+            assert isinstance(e.map_url, HttpUrl)
         if e.ticket_url is not None:
-            assert isinstance(e.ticket_url, Url)
+            assert isinstance(e.ticket_url, HttpUrl)
 
     e1, e2, e3 = events
     assert e1.event_id == 1
