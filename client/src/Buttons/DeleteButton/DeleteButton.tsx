@@ -15,7 +15,6 @@ interface DeleteButtonProps {
 
 function DeleteButton(props: DeleteButtonProps) {
   const handleDelete = () => {
-    console.log(props.series.series_id);
     deleteSeries(props.series.series_id, props.token)
       .then(() => {
         props.setSeriesList(

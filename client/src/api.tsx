@@ -68,7 +68,6 @@ export const getRoot = async (): Promise<TheGrapefruitsDuoAPI> => {
         ),
     ),
   );
-  console.log(tgd);
   return tgd;
 };
 
