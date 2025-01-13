@@ -10,6 +10,7 @@ interface EditModalProps {
   form: JSX.Element;
   entity?: MusicianProps | GroupObj | EventSeriesObj;
   error?: string;
+  livestream_id?: string;
 }
 
 function EditModal(props: EditModalProps) {

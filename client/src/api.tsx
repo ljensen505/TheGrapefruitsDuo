@@ -38,6 +38,7 @@ export const getRoot = async (): Promise<TheGrapefruitsDuoAPI> => {
       response.data.group.id,
       response.data.group.name,
       response.data.group.bio,
+      response.data.group.livestream_id,
     ),
     response.data.musicians.map(
       (musician: MusicianObj) =>
@@ -104,7 +105,12 @@ export const postUser = async (token: string): Promise<UserObj> => {
 
 export const getGroup = async (): Promise<GroupObj> => {
   const response = await api.get("/group/");
-  return new GroupObj(response.data.id, response.data.name, response.data.bio);
+  return new GroupObj(
+    response.data.id,
+    response.data.name,
+    response.data.bio,
+    response.data.livestream_id,
+  );
 };
 
 export const getMusicians = async (): Promise<MusicianObj[]> => {
@@ -143,15 +149,21 @@ export const patchMusician = async (
 export const patchGroup = async (
   id: number,
   bio: string,
+  livestream_id: string,
   name: string,
   user_token: string,
 ): Promise<GroupObj> => {
   const response = await api.patch(
     `/group/`,
-    { id, bio, name },
+    { id, bio, livestream_id, name },
     { headers: { Authorization: `Bearer ${user_token}` } },
   );
-  return new GroupObj(response.data.id, response.data.name, response.data.bio);
+  return new GroupObj(
+    response.data.id,
+    response.data.name,
+    response.data.bio,
+    response.data.livestream_id,
+  );
 };
 
 export const postHeadshot = async (

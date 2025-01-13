@@ -197,16 +197,20 @@ class MainController:
         """
         return self.group_controller.get_group()
 
-    async def update_group_bio(
-        self, bio: str, token: HTTPAuthorizationCredentials
+    async def update_group(
+        self, group: Group, token: HTTPAuthorizationCredentials
     ) -> Group:
         """
         Updates the group's bio and returns the updated group object.
-
-        :param str bio: The new bio for the group
-        :param HTTPAuthorizationCredentials token: The OAuth token
-        :return Group: The updated group object which is suitable for a response body
         """
         _, sub = self.oauth_token.email_and_sub(token)
         self.user_controller.get_user_by_sub(sub)
-        return self.group_controller.update_group_bio(bio)
+        self.group_controller.update_livestream(group.livestream_id)
+        return self.group_controller.update_group_bio(group.bio)
+
+    async def update_livestream(
+        self, livestream_id: str, token: HTTPAuthorizationCredentials
+    ) -> Group:
+        _, sub = self.oauth_token.email_and_sub(token)
+        self.user_controller.get_user_by_sub(sub)
+        return self.group_controller.update_livestream(livestream_id)

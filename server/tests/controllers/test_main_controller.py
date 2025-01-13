@@ -158,7 +158,7 @@ async def test_get_group():
 async def test_update_group_bio():
     """Tests the update_group_bio method."""
     bio = "A new bio"
-    await controller.update_group_bio(bio, mock_token)
+    await controller.update_group(bio, mock_token)
     MagicMock.assert_called_with(mock_oauth_token.email_and_sub, mock_token)
     MagicMock.assert_called(mock_user_controller.get_user_by_sub)
     MagicMock.assert_called(mock_group_controller.update_group_bio)

@@ -57,3 +57,13 @@ class GroupController(BaseController):
                 detail=f"Error updating group bio: {e}",
             )
         return self.get_group()
+
+    def update_livestream(self, livestream_id: str) -> Group:
+        try:
+            self.group_queries.update_livestream(livestream_id)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error updating livestram: {e}",
+            )
+        return self.get_group()
