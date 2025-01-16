@@ -5,7 +5,7 @@ interface LivestreamPlayerProps {
 }
 
 const LivestreamPlayer = (props: LivestreamPlayerProps) => {
-  const iframeSrc = `https://www.youtube.com/embed/${props.livestreamId}`;
+  const iframeSrc = `https://www.youtube.com/embed/${props.livestreamId}?autoplay=1`;
 
   return (
     <Container className="d-flex justify-content-center my-3">

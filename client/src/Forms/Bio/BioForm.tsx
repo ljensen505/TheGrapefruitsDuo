@@ -16,7 +16,9 @@ interface EditBioFormProps {
 
 function EditBioForm(props: EditBioFormProps) {
   const [formBio, setFormBio] = useState<string>(props.entity.bio);
-  const [formLivestreamId, setFormLivestreamId] = useState<string | undefined>(props.livestream_id)
+  const [formLivestreamId, setFormLivestreamId] = useState<string | undefined>(
+    props.livestream_id,
+  );
   const [canSubmit, setCanSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
@@ -25,10 +27,12 @@ function EditBioForm(props: EditBioFormProps) {
     setCanSubmit(true);
   };
 
-  const handleLivestreamChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleLivestreamChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     setFormLivestreamId(event.target.value);
     setCanSubmit(true);
-  }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -97,10 +101,12 @@ function EditBioForm(props: EditBioFormProps) {
       {props.livestream_id != undefined && (
         <Form.Group controlId="formLivestreamId">
           <p className="text-muted">
-            A livestream id is the part of a youtube url following "v=".
-            For example, "ncyl7cTU9k8" but without the quotations.
-            Don't mess it up. <br></br>
-            To remove an embedded livestream, just clear this field and submit the form.
+            A livestream id is part of a youtube url. Either
+            ".../v=[livestream_id]" or ".../live/[livestream_id]". For example,
+            "ncyl7cTU9k8" but without the quotations. Don't mess it up.{" "}
+            <br></br>
+            To remove an embedded livestream, just clear this field and submit
+            the form.
           </p>
           <Form.Label>Livestream ID:</Form.Label>
           <Form.Control
@@ -108,9 +114,8 @@ function EditBioForm(props: EditBioFormProps) {
             value={formLivestreamId}
             rows={1}
             onChange={handleLivestreamChange}
-            placeholder="ncyl7cTU9k8"
+            placeholder=""
           />
-
         </Form.Group>
       )}
       <Form.Group controlId="formBio">
