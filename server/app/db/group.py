@@ -34,3 +34,15 @@ class GroupQueries(BaseQueries):
         cursor.execute(query, (bio,))
         conn.commit()
         self.close_cursor_and_conn(cursor, conn)
+
+    def update_livestream(self, livestream_id: str) -> None:
+        cursor, conn = self.get_cursor_and_conn()
+        query = f"""-- sql
+            UPDATE {self.table} SET livestream_id = %s WHERE id = 1
+            """
+        cursor.execute(query, (livestream_id,))
+        conn.commit()
+        self.close_cursor_and_conn(cursor, conn)
+
+    def delete_livestream(self) -> None:
+        self.update_livestream(livestream_id="")

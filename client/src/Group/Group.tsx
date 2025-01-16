@@ -5,16 +5,19 @@ import { useState } from "react";
 import EditBioForm from "../Forms/Bio/BioForm";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import EditButton from "../Buttons/EditButton/EditButton";
+import LivestreamPlayer from "../LivestreamPlayer/LivestreamPlayer";
 
 export class GroupObj {
   id: number;
   name: string;
   bio: string;
+  livestream_id: string;
 
-  constructor(id: number, name: string, bio: string) {
+  constructor(id: number, name: string, bio: string, livestream_id: string) {
     this.id = id;
     this.name = name;
     this.bio = bio;
+    this.livestream_id = livestream_id;
   }
 }
 
@@ -39,7 +42,7 @@ function Group(props: GroupProps) {
       <EditButton
         setModalShow={setModalShow}
         faIcon={faPen}
-        actionName=" Group Bio"
+        actionName=" Group"
       />
       <EditModal
         show={modalShow}
@@ -53,6 +56,7 @@ function Group(props: GroupProps) {
             onBioChange={props.onBioChange}
             setGroup={props.setGroup}
             token={props.token}
+            livestream_id={group.livestream_id}
           />
         }
       />
@@ -67,6 +71,9 @@ function Group(props: GroupProps) {
             <Card.Title>
               <h1>{group.name}</h1>
             </Card.Title>
+            {group.livestream_id && (
+              <LivestreamPlayer livestreamId={group.livestream_id} />
+            )}
             {props.token && EditIcon}
             <Card.Text className="lead group-bio">{group.bio}</Card.Text>
           </Card.Body>

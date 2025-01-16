@@ -1,5 +1,5 @@
 import Modal from "react-bootstrap/Modal";
-import { MusicianProps } from "../Musicians/Musician/Musician";
+import { MusicianObj } from "../Musicians/Musician/Musician";
 import { GroupObj } from "../Group/Group";
 import { EventSeriesObj } from "../Series/SeriesList";
 
@@ -8,8 +8,9 @@ interface EditModalProps {
   show: boolean;
   onHide: () => void;
   form: JSX.Element;
-  entity?: MusicianProps | GroupObj | EventSeriesObj;
+  entity?: MusicianObj | GroupObj | EventSeriesObj;
   error?: string;
+  livestream_id?: string;
 }
 
 function EditModal(props: EditModalProps) {

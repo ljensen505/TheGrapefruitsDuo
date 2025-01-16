@@ -15,7 +15,7 @@ def connect_db() -> mysql.connector.MySQLConnection:
 
     Credential values are validated and an exception is raised if any are missing.
     """
-    load_dotenv()
+    load_dotenv(override=True)
     host = os.getenv("DB_HOST")
     user = os.getenv("DB_USER")
     password = os.getenv("DB_PASSWORD")

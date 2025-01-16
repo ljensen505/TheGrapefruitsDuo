@@ -4,6 +4,7 @@ import pytest
 
 from app.controllers.controller import MainController
 from app.models.event import EventSeries, NewEventSeries
+from app.models.group import Group
 from app.models.musician import Musician
 
 mock_user_controller = MagicMock()
@@ -158,7 +159,8 @@ async def test_get_group():
 async def test_update_group_bio():
     """Tests the update_group_bio method."""
     bio = "A new bio"
-    await controller.update_group_bio(bio, mock_token)
+    group = Group(name="The Grapefruits Duo", bio=bio, livestream_id="")
+    await controller.update_group(group, mock_token)
     MagicMock.assert_called_with(mock_oauth_token.email_and_sub, mock_token)
     MagicMock.assert_called(mock_user_controller.get_user_by_sub)
     MagicMock.assert_called(mock_group_controller.update_group_bio)
