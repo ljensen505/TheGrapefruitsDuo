@@ -24,5 +24,4 @@ async def update_group(
 ) -> Group:
     """Updates the group bio, but requires the entire group object to be sent in the request body.
     Requires authentication."""
-    ic(group)
     return await controller.update_group(group, token)

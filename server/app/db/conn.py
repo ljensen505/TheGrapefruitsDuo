@@ -21,11 +21,6 @@ def connect_db() -> mysql.connector.MySQLConnection:
     password = os.getenv("DB_PASSWORD")
     database = os.getenv("DB_DATABASE")
 
-    print(host)
-    print(user)
-    print(password)
-    print(database)
-
     if None in [host, user, password, database]:
         raise DBException("Missing database credentials")
 
