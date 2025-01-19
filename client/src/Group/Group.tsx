@@ -102,7 +102,7 @@ function Group(props: GroupProps) {
                   <Image
                     src={programUrl}
                     className="img-fluid"
-                    alt="A PDF of the program fo the current livestream"
+                    alt="A of the current livestream"
                   />
                 </a>
               </Container>
