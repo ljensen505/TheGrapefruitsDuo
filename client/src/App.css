@@ -30,6 +30,11 @@ body {
   }
 }
 
+section {
+  margin-top: 10em;
+  margin-bottom: 10em;
+}
+
 .btn-primary {
   background-color: var(--group-info-color);
   border-color: var(--group-info-color);

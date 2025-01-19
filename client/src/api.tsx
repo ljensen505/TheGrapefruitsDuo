@@ -39,6 +39,7 @@ export const getRoot = async (): Promise<TheGrapefruitsDuoAPI> => {
       response.data.group.name,
       response.data.group.bio,
       response.data.group.livestream_id,
+      response.data.group.livestream_program_cld_id,
     ),
     response.data.musicians.map(
       (musician: MusicianObj) =>
@@ -110,6 +111,7 @@ export const getGroup = async (): Promise<GroupObj> => {
     response.data.name,
     response.data.bio,
     response.data.livestream_id,
+    response.data.livestream_program_cld_id,
   );
 };
 
@@ -152,10 +154,11 @@ export const patchGroup = async (
   livestream_id: string,
   name: string,
   user_token: string,
+  livestream_program_cld_id?: string,
 ): Promise<GroupObj> => {
   const response = await api.patch(
     `/group/`,
-    { id, bio, livestream_id, name },
+    { id, bio, livestream_id, name, livestream_program_cld_id },
     { headers: { Authorization: `Bearer ${user_token}` } },
   );
   return new GroupObj(
@@ -163,6 +166,7 @@ export const patchGroup = async (
     response.data.name,
     response.data.bio,
     response.data.livestream_id,
+    response.data.livestream_program_cld_id,
   );
 };
 
